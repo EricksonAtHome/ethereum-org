@@ -2,6 +2,29 @@
 
 Real multi-language banking stack with a **Next.js frontend**, **UPay USDT Payment Gateway**, and polyglot backend services.
 
+## Production setup (real mainnet USDT)
+
+1. Copy `.env.example` to `.env` and set:
+   - `UPAY_TRC20_WALLET` / `UPAY_ERC20_WALLET` — your real receive wallets (optional; auto-generated if empty)
+   - `INFURA_API_KEY` — for ERC20 balance checks ([infura.io](https://infura.io))
+   - `ETHERSCAN_API_KEY` — for ERC20 tx matching ([etherscan.io](https://etherscan.io/apis))
+
+2. Start the stack:
+```bash
+docker compose up --build
+```
+
+3. On first boot, the gateway:
+   - Generates **real mainnet** TRC20/ERC20 wallets if none are configured
+   - Saves private keys to the `upay-secrets` Docker volume
+   - Creates QR codes from actual wallet addresses
+   - Polls TronGrid + Etherscan every **15 seconds** for incoming USDT
+
+4. Check generated wallets in container logs:
+```bash
+docker compose logs usdt-gateway | grep upay-config
+```
+
 ## Architecture
 
 | Layer | Language | Service | Port | Responsibility |

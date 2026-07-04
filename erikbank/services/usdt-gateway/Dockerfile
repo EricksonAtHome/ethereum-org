@@ -18,7 +18,7 @@ COPY . /var/www/html/
 RUN mkdir -p runtime public/upload/qrcode \
     && chmod -R 777 runtime public/upload \
     && cp .env.docker .env \
-    && chmod +x docker-entrypoint.sh
+    && chmod +x docker-entrypoint.sh scripts/configure-wallets.php
 
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 

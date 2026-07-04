@@ -85,6 +85,7 @@ func main() {
 	mux.HandleFunc("/api/payments", withCORS(paymentsHandler))
 	mux.HandleFunc("/api/payments/", withCORS(paymentSubHandler))
 	mux.HandleFunc("/api/usdt/notify", withCORS(usdtNotifyHandler))
+	mux.HandleFunc("/api/usdt/rate", withCORS(usdtRateHandler))
 
 	log.Printf("payment-router (Go) listening on :%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
@@ -266,6 +267,7 @@ func paymentsHandler(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadGateway, map[string]string{"error": "USDT gateway unavailable: " + err.Error()})
 		return
 	}
+	order.Img = upayPublicURL(order.Img)
 
 	rawGateway, _ := json.Marshal(order)
 	var expiresAt *time.Time
@@ -400,6 +402,25 @@ func usdtStatusHandler(w http.ResponseWriter, r *http.Request, paymentRef string
 		"usdtAddress":     record.USDTAddress,
 		"status":          status,
 		"successTime":     search.SuccessTime,
+	})
+}
+
+func usdtRateHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	upay := newUPayClient()
+	rate, err := upay.GetExchangeRate()
+	if err != nil {
+		writeJSON(w, http.StatusBadGateway, map[string]string{"error": err.Error()})
+		return
+	}
+	writeJSON(w, http.StatusOK, map[string]any{
+		"currency": "USDT",
+		"quote":    "CNY",
+		"rate":     rate,
+		"source":   "upay-live",
 	})
 }
 

@@ -51,6 +51,16 @@ services:
     environment:
       REDIS_HOST: upay-redis
       REDIS_PORT: 6379
+      UPAY_MYSQL_HOST: upay-mysql
+      UPAY_TRC20_WALLET: ${UPAY_TRC20_WALLET:-}
+      UPAY_ERC20_WALLET: ${UPAY_ERC20_WALLET:-}
+      INFURA_API_KEY: ${INFURA_API_KEY:-}
+      ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY:-}
+      UPAY_APP_ID: ${UPAY_APP_ID:-ciofh5fe}
+      UPAY_APP_SECRET: ${UPAY_APP_SECRET:-ed696eb5bba1f7460585cc6975e6cf9bf24903dd}
+      UPAY_MERCHANT_NAME: ErikBank Merchant
+    volumes:
+      - upay-secrets:/var/upay-secrets
     depends_on:
       upay-mysql:
         condition: service_healthy
@@ -61,6 +71,12 @@ services:
     build:
       context: ./services/usdt-gateway
       dockerfile: Dockerfile.worker
+    environment:
+      REDIS_HOST: upay-redis
+      REDIS_PORT: 6379
+      UPAY_MYSQL_HOST: upay-mysql
+    volumes:
+      - upay-secrets:/var/upay-secrets
     depends_on:
       - usdt-gateway
       - upay-mysql
@@ -87,6 +103,7 @@ services:
       ENTERPRISE_URL: http://enterprise:8083
       FRAUD_URL: http://fraud-analytics:8084
       UPAY_GATEWAY_URL: http://usdt-gateway:80
+      UPAY_PUBLIC_URL: http://localhost:8090
       UPAY_APP_ID: ciofh5fe
       UPAY_APP_SECRET: ed696eb5bba1f7460585cc6975e6cf9bf24903dd
       UPAY_NOTIFY_URL: http://payment-router:8082/api/usdt/notify
@@ -135,3 +152,6 @@ services:
     depends_on:
       - payment-router
       - fraud-analytics
+
+volumes:
+  upay-secrets:

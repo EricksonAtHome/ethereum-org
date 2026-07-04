@@ -608,7 +608,45 @@ body::before {
   margin-bottom: 10px;
 }
 
+.usdtAddressRow {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+.copyBtn {
+  border: none;
+  border-radius: 12px;
+  background: #14140f;
+  color: #fdf6ec;
+  padding: 0 14px;
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.usdtCountdown {
+  font-size: 13px;
+  color: #9a8f80;
+  margin-bottom: 10px;
+}
+
+.usdtLinks {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.explorerLink {
+  color: #14140f;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .usdtAddress {
+  flex: 1;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12px;
   word-break: break-all;
@@ -616,7 +654,6 @@ body::before {
   border: 1px dashed #e8672c;
   border-radius: 12px;
   padding: 12px;
-  margin-bottom: 12px;
 }
 
 .usdtHint {

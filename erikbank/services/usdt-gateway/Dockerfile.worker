@@ -28,5 +28,5 @@ CMD while true; do \
       php think deal_withdraw; \
       php think withdraw_notify; \
       php think deal_recharge; \
-      sleep 60; \
+      sleep 15; \
     done

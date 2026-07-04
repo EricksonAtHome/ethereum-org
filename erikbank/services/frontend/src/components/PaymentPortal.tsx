@@ -24,6 +24,8 @@ import type {
 import { EMPTY_WWFT } from "@/lib/types";
 import { CryptoDisclaimerBanner } from "./CryptoDisclaimerBanner";
 import { QrCode } from "./QrCode";
+import { UsdtCheckoutPanel } from "./UsdtCheckoutPanel";
+import { UsdtQrImage } from "./UsdtQrImage";
 import { WwftForm } from "./WwftForm";
 
 interface PaymentPortalProps {
@@ -70,6 +72,7 @@ export function PaymentPortal({
   );
   const [lastPayment, setLastPayment] = useState<PaymentResponse | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
+  const [liveRate, setLiveRate] = useState<number | null>(null);
 
   const selectedBankName =
     banks.find((bank) => bank.code === selectedBank)?.name || selectedBank;
@@ -104,6 +107,13 @@ export function PaymentPortal({
 
     loadBanks();
     loadAnalytics();
+
+    fetch("/api/usdt/rate")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (data?.rate) setLiveRate(Number(data.rate));
+      })
+      .catch(() => undefined);
   }, [method]);
 
   useEffect(() => {
@@ -126,7 +136,7 @@ export function PaymentPortal({
       } catch {
         /* keep polling */
       }
-    }, 5000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [lastPayment]);
@@ -201,6 +211,13 @@ export function PaymentPortal({
     <>
       <CryptoDisclaimerBanner />
 
+      {liveRate != null && (
+        <div className="analyticsBar">
+          Live USDT/CNY rate: {liveRate.toFixed(4)} · real mainnet gateway · WWFT records stored in
+          PostgreSQL
+        </div>
+      )}
+
       {analytics && (
         <div className="analyticsBar">
           PostgreSQL ledger · {analytics.totalTransactions} payments · WWFT records stored ·{" "}
@@ -252,23 +269,7 @@ export function PaymentPortal({
           <p className="cryptoNote">USDT cryptocurrency only — not euro (EUR)</p>
 
           {lastPayment?.usdtAddress ? (
-            <div className="usdtCheckout">
-              <div className="usdtAmountLine">
-                Pay exactly <strong>{usdtAmount} USDT</strong>
-              </div>
-              <div className="usdtAddress">{lastPayment.usdtAddress}</div>
-              {lastPayment.qrImageUrl && (
-                <img
-                  className="usdtQrImage"
-                  src={lastPayment.qrImageUrl}
-                  alt="USDT payment QR code"
-                />
-              )}
-              <p className="usdtHint">
-                Order {lastPayment.merchantOrderSn} · {lastPayment.chainLabel} · waiting for
-                blockchain confirmation
-              </p>
-            </div>
+            <UsdtCheckoutPanel payment={lastPayment} />
           ) : (
             <>
               {showWwft && <WwftForm value={wwft} onChange={setWwft} disabled={loading} />}
@@ -341,11 +342,10 @@ export function PaymentPortal({
           ) : (
             <div className="qrWrap">
               <div className="qrBox">
-                {lastPayment?.qrImageUrl ? (
-                  <img
-                    src={lastPayment.qrImageUrl}
-                    alt="USDT QR"
+                {lastPayment?.usdtAddress ? (
+                  <UsdtQrImage
                     className="usdtQrImageInline"
+                    value={lastPayment.usdtAddress}
                   />
                 ) : (
                   <QrCode />
@@ -354,8 +354,8 @@ export function PaymentPortal({
               <p className="qrText">
                 {lastPayment?.usdtAddress ? (
                   <>
-                    Send <strong>{usdtAmount} USDT</strong> on {lastPayment.chainLabel} to{" "}
-                    <strong>{lastPayment.usdtAddress}</strong>
+                    Send <strong>{usdtAmount} USDT</strong> on {lastPayment.chainLabel} to the
+                    address shown above.
                   </>
                 ) : (
                   <>

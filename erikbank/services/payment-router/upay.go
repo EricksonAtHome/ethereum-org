@@ -135,6 +135,46 @@ func (c *UPayClient) SearchOrder(orderSN string) (*UPaySearchResult, error) {
 	return &result, nil
 }
 
+func (c *UPayClient) GetExchangeRate() (float64, error) {
+	params := map[string]string{
+		"appid": c.AppID,
+	}
+	params["signature"] = upaySignature(params, c.AppSecret)
+
+	body, err := c.postForm("/api/pay/exchange_rate", params)
+	if err != nil {
+		return 0, err
+	}
+
+	var envelope upayResponse
+	if err := json.Unmarshal(body, &envelope); err != nil {
+		return 0, err
+	}
+	if envelope.Code != 1 {
+		return 0, fmt.Errorf("upay rate failed: %s", envelope.Msg)
+	}
+
+	var rate float64
+	if err := json.Unmarshal(envelope.Data, &rate); err != nil {
+		return 0, err
+	}
+	return rate, nil
+}
+
+func upayPublicURL(path string) string {
+	base := strings.TrimRight(env("UPAY_PUBLIC_URL", env("UPAY_GATEWAY_URL", "http://localhost:8090")), "/")
+	if path == "" {
+		return base
+	}
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+		return path
+	}
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
+	return base + path
+}
+
 func (c *UPayClient) postForm(path string, params map[string]string) ([]byte, error) {
 	form := url.Values{}
 	for key, value := range params {

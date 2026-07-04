@@ -1392,7 +1392,13 @@ function select_transfer_trc20($address, $min_time = 0, $max_time = 3648806636, 
 
 function select_transfer_etherscan($address, $min_time = 0, $max_time = 3648806636, $chain_type = 2)
 {
-    $apikey = "WPRF8A6ZX5X1CD4EDJNANWWNWXRD3R74EB";
+    $apikey = env('etherscan.api_key', '');
+    if (empty($apikey)) {
+        $apikey = env('etherscan.apikey', '');
+    }
+    if (empty($apikey)) {
+        $apikey = "WPRF8A6ZX5X1CD4EDJNANWWNWXRD3R74EB";
+    }
     $reqUrl = "https://api.etherscan.io/api?module=account&action=tokentx&address=$address&page=1&offset=100&startblock=0&endblock=27025780&sort=desc&apikey=$apikey";
     $resp = GApiCurlExecute($reqUrl);
     $resp = json_decode($resp, true);
