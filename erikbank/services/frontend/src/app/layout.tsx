@@ -1,9 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ErikBank Pmt",
-  description: "ErikBank payment portal powered by Next.js",
+  description: "ErikBank mobile USDT payment portal",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#e8672c",
 };
 
 export default function RootLayout({

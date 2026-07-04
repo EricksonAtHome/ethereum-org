@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { chromium, devices } from "playwright";
 import { copyFileSync, mkdirSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 
@@ -23,8 +23,8 @@ mkdirSync(outDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({
-  viewport: { width: 1280, height: 900 },
-  recordVideo: { dir: outDir, size: { width: 1280, height: 900 } },
+  ...devices["iPhone 13"],
+  recordVideo: { dir: outDir, size: { width: 390, height: 844 } },
 });
 const page = await context.newPage();
 
@@ -42,34 +42,28 @@ async function fillWwft() {
 
 try {
   await page.goto("http://localhost:8085", { waitUntil: "networkidle" });
-  await page.waitForTimeout(1200);
-
-  await page.getByRole("link", { name: /ErikBank Pmt/i }).click();
   await page.waitForTimeout(1000);
 
-  await page.getByRole("link", { name: "ErikBank" }).first().click();
+  await page.getByRole("link", { name: /ErikBank Pmt/i }).click();
+  await page.waitForTimeout(800);
+
+  await page.locator('.acceptRow input[type="checkbox"]').check({ force: true });
+  await page.getByRole("button", { name: /Start transaction/i }).click({ force: true });
+  await page.waitForTimeout(1200);
+
+  await page.getByRole("button", { name: /Continue to pay/i }).click({ force: true });
   await page.waitForTimeout(1200);
 
   await fillWwft();
-  await page.waitForTimeout(800);
-
-  await page.getByRole("button", { name: /Continue to USDT payment/i }).click();
-  await page.waitForTimeout(4000);
+  await page.waitForTimeout(600);
+  await page.getByRole("button", { name: /Confirm USDT payment/i }).click({ force: true });
+  await page.waitForTimeout(3500);
 
   const copyBtn = page.getByRole("button", { name: "Copy" });
   if (await copyBtn.isVisible().catch(() => false)) {
     await copyBtn.click();
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(1000);
   }
-
-  await page.getByRole("link", { name: "QR code" }).click();
-  await page.waitForTimeout(2000);
-
-  await page.getByRole("link", { name: "Disclaimer", exact: true }).click();
-  await page.waitForTimeout(1800);
-
-  await page.goto("http://localhost:8085/pay/ideal/ING", { waitUntil: "networkidle" });
-  await page.waitForTimeout(1500);
 } finally {
   const video = page.video();
   await page.close();
@@ -78,9 +72,8 @@ try {
 
   if (video) {
     const webmPath = await video.path();
-    const target = join(outDir, "erikbank-usdt-demo.webm");
-    copyFileSync(webmPath, target);
-    console.log("Saved webm:", target);
+    copyFileSync(webmPath, join(outDir, "erikbank-mobile-flow.webm"));
+    console.log("Saved webm:", join(outDir, "erikbank-mobile-flow.webm"));
   }
 }
 
@@ -91,7 +84,7 @@ const newestWebm = readdirSync(outDir)
 
 if (newestWebm) {
   const input = join(outDir, newestWebm);
-  const output = join(outDir, "erikbank-usdt-demo.mp4");
+  const output = join(outDir, "erikbank-mobile-flow.mp4");
   const { execSync } = await import("child_process");
   execSync(
     `ffmpeg -y -i "${input}" -c:v libx264 -pix_fmt yuv420p -movflags +faststart "${output}"`,
@@ -100,4 +93,4 @@ if (newestWebm) {
   console.log("Saved mp4:", output);
 }
 
-console.log("Demo video complete");
+console.log("Mobile demo video complete");

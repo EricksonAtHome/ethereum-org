@@ -3,48 +3,55 @@ import {
   BANK_CATALOG,
   DISCLAIMER,
   METHOD_LABELS,
+  payBankPath,
 } from "@/lib/constants";
 import type { PaymentMethod } from "@/lib/types";
-import { CryptoDisclaimerBanner } from "./CryptoDisclaimerBanner";
+
+const DEFAULT_BANK: Record<PaymentMethod, string> = {
+  erikbank: "ERIKBANK",
+  ideal: "ING",
+  wero: "BNP",
+};
 
 export function DisclaimerPage() {
   return (
-    <>
-      <CryptoDisclaimerBanner />
-      <div className="stack">
-        <div className="card methodCard">
-          <div className="methodTitle">{DISCLAIMER.title}</div>
-          <p className="legalText">{DISCLAIMER.summary}</p>
-          <ul className="legalList">
-            {DISCLAIMER.points.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
-          <p className="legalText">
-            By continuing to any pay page you confirm you understand settlement
-            happens in cryptocurrency, not euro fiat currency.
-          </p>
-          <div className="navLinks">
-            <Link className="navBtn" href="/">
-              Back to home
-            </Link>
-          </div>
-        </div>
+    <div className="stack">
+      <div className="pageHero">
+        <h1>{DISCLAIMER.title}</h1>
+        <p>{DISCLAIMER.summary}</p>
+      </div>
 
-        <div className="card methodCard">
-          <div className="methodTitle">Payment method disclaimers</div>
-          {(Object.keys(BANK_CATALOG) as PaymentMethod[]).map((method) => (
-            <div key={method} className="methodDisclaimerBlock">
-              <h3>{METHOD_LABELS[method].title}</h3>
-              <p className="legalText">
-                {METHOD_LABELS[method].description}. Crypto settlement only —
-                not euro.{" "}
-                <Link href={`/pay/${method}`}>Open {METHOD_LABELS[method].title}</Link>
-              </p>
-            </div>
+      <div className="card methodCard">
+        <ul className="legalList">
+          {DISCLAIMER.points.map((point) => (
+            <li key={point}>{point}</li>
           ))}
+        </ul>
+        <p className="legalText">
+          By starting a transaction you confirm settlement happens in USDT
+          cryptocurrency, not euro fiat.
+        </p>
+        <div className="navLinks">
+          <Link className="navBtn" href="/">
+            Back to home
+          </Link>
         </div>
       </div>
-    </>
+
+      <div className="card methodCard">
+        <div className="methodTitle">Start a payment</div>
+        {(Object.keys(BANK_CATALOG) as PaymentMethod[]).map((method) => (
+          <div key={method} className="methodDisclaimerBlock">
+            <h3>{METHOD_LABELS[method].title}</h3>
+            <p className="legalText">
+              {METHOD_LABELS[method].description}.{" "}
+              <Link href={payBankPath(method, DEFAULT_BANK[method])}>
+                Start {METHOD_LABELS[method].title}
+              </Link>
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

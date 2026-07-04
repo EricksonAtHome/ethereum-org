@@ -12,14 +12,16 @@ body {
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 24px;
-  padding: 40px 20px;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background:
     radial-gradient(circle at 15% 105%, #fcd9ad 0%, #fcd9ad 22%, transparent 45%),
     radial-gradient(circle at 90% 15%, #f3934a 0%, #f3934a 30%, transparent 55%),
@@ -40,10 +42,259 @@ body::before {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+}
+
+.mobileShell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 8px;
+}
+
+.mobileContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobileFooter {
+  position: sticky;
+  bottom: 0;
+  padding-top: 8px;
+}
+
+.stepBar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 20px;
+  background: rgba(253, 246, 236, 0.92);
+  box-shadow: 0 8px 24px rgba(120, 60, 10, 0.1);
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.45;
+}
+
+.stepCurrent {
+  opacity: 1;
+}
+
+.stepDone {
+  opacity: 0.85;
+}
+
+.stepDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: #f1e9db;
+  color: #14140f;
+}
+
+.stepCurrent .stepDot {
+  background: #14140f;
+  color: #fdf6ec;
+}
+
+.stepDone .stepDot {
+  background: #dcf29a;
+}
+
+.stepLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: #7a7060;
+  text-align: center;
+}
+
+.flowCard {
+  padding: 28px 22px;
+}
+
+.flowEyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e8672c;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.flowTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #14140f;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.flowLead {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #9a8f80;
+  margin-bottom: 18px;
+}
+
+.disclaimerBox {
+  background: #fff;
+  border: 1px solid #eee0cd;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.disclaimerBox h3 {
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: #14140f;
+}
+
+.acceptRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #14140f;
+  margin-bottom: 20px;
+}
+
+.acceptRow input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.summaryGrid,
+.receiptBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #eee0cd;
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: #9a8f80;
+}
+
+.summaryRow strong {
+  color: #14140f;
+  text-align: right;
+  word-break: break-all;
+}
+
+.amountHero {
+  margin-bottom: 8px;
+}
+
+.flowActions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btnSecondary {
+  width: 100%;
+  border: 1px solid #eee0cd;
+  background: #fff;
+  color: #14140f;
+  border-radius: 999px;
+  padding: 14px 20px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btnLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+}
+
+.inlineError {
+  background: #fff5ef;
+  border: 1px solid #e8672c;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #14140f;
+  margin-bottom: 14px;
+}
+
+.waitingNote {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #9a8f80;
+  text-align: center;
+}
+
+.receiptCard {
+  text-align: center;
+}
+
+.receiptIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #dcf29a;
+  color: #14140f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 auto 12px;
+}
+
+.statusPaid {
+  color: #5a8f1a;
+}
+
+.pageHero {
+  text-align: center;
+  padding: 8px 4px 0;
+}
+
+.pageHero h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #14140f;
+  margin-bottom: 6px;
+}
+
+.pageHero p {
+  font-size: 14px;
+  color: rgba(20, 20, 15, 0.72);
+  line-height: 1.5;
 }
 
 .card {
@@ -312,7 +563,7 @@ body::before {
 
 .statusBanner {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   border-radius: 16px;
   padding: 14px 18px;
   font-size: 13px;
@@ -339,7 +590,7 @@ body::before {
 
 .analyticsBar {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   border-radius: 16px;
   padding: 12px 16px;
   font-size: 12px;
@@ -351,7 +602,7 @@ body::before {
 
 .disclaimerBanner {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   border-radius: 16px;
   padding: 12px 16px;
   font-size: 12px;
@@ -507,12 +758,14 @@ body::before {
 }
 
 @media (max-width: 480px) {
-  .card {
-    padding: 28px 24px;
+  .card,
+  .flowCard {
+    padding: 24px 18px;
     border-radius: 24px;
   }
 
-  .amount {
+  .amount,
+  .amountHero {
     font-size: 38px;
   }
 
@@ -525,6 +778,14 @@ body::before {
   .btnArrow {
     width: 40px;
     height: 40px;
+  }
+
+  .stepLabel {
+    font-size: 9px;
+  }
+
+  .flowTitle {
+    font-size: 22px;
   }
 }
 

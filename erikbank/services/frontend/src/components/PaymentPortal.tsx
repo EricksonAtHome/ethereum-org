@@ -1,32 +1,25 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
-  BANK_COLORS,
   CRYPTO_CURRENCY,
   DEFAULT_AMOUNT_UNITS,
   METHOD_LABELS,
-  bankInitials,
   formatCryptoParts,
-  methodHubPath,
-  payBankPath,
-  payQrPath,
 } from "@/lib/constants";
+import type { PaymentStep } from "@/lib/payment-flow";
 import type {
-  AnalyticsSummary,
-  BankOption,
   PaymentMethod,
   PaymentResponse,
   UsdtStatusResponse,
   WwftPayerData,
 } from "@/lib/types";
 import { EMPTY_WWFT } from "@/lib/types";
-import { CryptoDisclaimerBanner } from "./CryptoDisclaimerBanner";
-import { QrCode } from "./QrCode";
-import { UsdtCheckoutPanel } from "./UsdtCheckoutPanel";
-import { UsdtQrImage } from "./UsdtQrImage";
-import { WwftForm } from "./WwftForm";
+import { MobileShell } from "./MobileShell";
+import { PayStep } from "./steps/PayStep";
+import { PriceStep } from "./steps/PriceStep";
+import { ReceiptStep } from "./steps/ReceiptStep";
+import { WelcomeStep } from "./steps/WelcomeStep";
 
 interface PaymentPortalProps {
   method: PaymentMethod;
@@ -35,8 +28,6 @@ interface PaymentPortalProps {
   payeeName?: string;
   amountUnits?: number;
 }
-
-type StatusType = "success" | "error" | "pending";
 
 function isWwftComplete(wwft: WwftPayerData) {
   return Boolean(
@@ -62,59 +53,25 @@ export function PaymentPortal({
   const labels = METHOD_LABELS[method];
   const amount = useMemo(() => formatCryptoParts(amountUnits), [amountUnits]);
 
-  const [banks, setBanks] = useState<BankOption[]>([]);
-  const [selectedBank, setSelectedBank] = useState(bankCode.toUpperCase());
+  const [step, setStep] = useState<PaymentStep>("welcome");
+  const [selectedBank] = useState(bankCode.toUpperCase());
   const [wwft, setWwft] = useState<WwftPayerData>(EMPTY_WWFT);
-  const [showWwft, setShowWwft] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<{ message: string; type: StatusType } | null>(
-    null,
-  );
+  const [error, setError] = useState<string | null>(null);
   const [lastPayment, setLastPayment] = useState<PaymentResponse | null>(null);
-  const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
   const [liveRate, setLiveRate] = useState<number | null>(null);
 
-  const selectedBankName =
-    banks.find((bank) => bank.code === selectedBank)?.name || selectedBank;
+  const bankName =
+    mode === "qr" ? `${labels.bankTab} QR` : selectedBank;
 
   useEffect(() => {
-    setSelectedBank(bankCode.toUpperCase());
-  }, [bankCode]);
-
-  useEffect(() => {
-    async function loadBanks() {
-      try {
-        const response = await fetch(`/api/banks?method=${method}`);
-        if (!response.ok) throw new Error("Could not load banks");
-        const data = await response.json();
-        setBanks(data.banks || []);
-      } catch {
-        setStatus({
-          message: "Backend unavailable. Start ./scripts/start-local.sh",
-          type: "error",
-        });
-      }
-    }
-
-    async function loadAnalytics() {
-      try {
-        const response = await fetch("/api/analytics");
-        if (response.ok) setAnalytics(await response.json());
-      } catch {
-        /* optional */
-      }
-    }
-
-    loadBanks();
-    loadAnalytics();
-
     fetch("/api/usdt/rate")
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (data?.rate) setLiveRate(Number(data.rate));
       })
       .catch(() => undefined);
-  }, [method]);
+  }, []);
 
   useEffect(() => {
     if (!lastPayment?.paymentRef || lastPayment.status === "completed") return;
@@ -128,10 +85,7 @@ export function PaymentPortal({
           setLastPayment((prev) =>
             prev ? { ...prev, status: "completed", usdtOrderStatus: result.usdtOrderStatus } : prev,
           );
-          setStatus({
-            message: `USDT payment confirmed on ${prevChainLabel(lastPayment)}. Ref ${lastPayment.paymentRef}`,
-            type: "success",
-          });
+          setStep("receipt");
         }
       } catch {
         /* keep polling */
@@ -141,25 +95,14 @@ export function PaymentPortal({
     return () => clearInterval(interval);
   }, [lastPayment]);
 
-  function prevChainLabel(payment: PaymentResponse) {
-    return payment.chainLabel || "TRC20";
-  }
-
-  async function handlePay() {
+  async function handleConfirmPay() {
     if (!isWwftComplete(wwft)) {
-      setShowWwft(true);
-      setStatus({
-        message: "Complete all WWFT identity fields before paying.",
-        type: "error",
-      });
+      setError("Complete all identity fields before paying.");
       return;
     }
 
     setLoading(true);
-    setStatus({
-      message: "Creating USDT order via UPay → storing WWFT data in PostgreSQL…",
-      type: "pending",
-    });
+    setError(null);
 
     try {
       const response = await fetch("/api/payments", {
@@ -181,204 +124,69 @@ export function PaymentPortal({
       }
 
       setLastPayment(result);
-      setShowWwft(false);
-      setStatus({
-        message: `${result.message} Ref ${result.paymentRef}`,
-        type: "success",
-      });
-
-      const analyticsResponse = await fetch("/api/analytics");
-      if (analyticsResponse.ok) setAnalytics(await analyticsResponse.json());
-    } catch (error) {
-      setStatus({
-        message: error instanceof Error ? error.message : "Payment failed",
-        type: "error",
-      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Payment failed");
     } finally {
       setLoading(false);
     }
   }
 
-  const displayAmount = lastPayment
-    ? formatCryptoParts(lastPayment.amountCents)
-    : amount;
+  function resetFlow() {
+    setStep("welcome");
+    setLastPayment(null);
+    setWwft(EMPTY_WWFT);
+    setError(null);
+  }
 
-  const usdtAmount = lastPayment?.payUsdt
-    ? lastPayment.payUsdt.toFixed(2)
-    : `${displayAmount.whole}.${displayAmount.fraction}`;
+  const amountLabel = `${amount.whole}.${amount.fraction}`;
+  const activeChain = wwft.chainType === 2 ? "ERC20" : "TRC20";
 
   return (
-    <>
-      <CryptoDisclaimerBanner />
-
-      {liveRate != null && (
-        <div className="analyticsBar">
-          Live USDT/CNY rate: {liveRate.toFixed(4)} · real mainnet gateway · WWFT records stored in
-          PostgreSQL
-        </div>
+    <MobileShell step={step}>
+      {liveRate != null && step !== "receipt" && (
+        <div className="analyticsBar">Live USDT rate · {liveRate.toFixed(2)} CNY</div>
       )}
 
-      {analytics && (
-        <div className="analyticsBar">
-          PostgreSQL ledger · {analytics.totalTransactions} payments · WWFT records stored ·{" "}
-          {formatCryptoParts(analytics.volumeCents).whole}.
-          {formatCryptoParts(analytics.volumeCents).fraction} {CRYPTO_CURRENCY} volume
-        </div>
+      {step === "welcome" && (
+        <WelcomeStep methodTitle={labels.title} onStart={() => setStep("price")} />
       )}
 
-      {status && (
-        <div
-          className={`statusBanner ${
-            status.type === "success"
-              ? "statusSuccess"
-              : status.type === "error"
-                ? "statusError"
-                : "statusPending"
-          }`}
-        >
-          {status.message}
-        </div>
+      {step === "price" && (
+        <PriceStep
+          payeeName={payeeName}
+          amountWhole={amount.whole}
+          amountFraction={amount.fraction}
+          currency={CRYPTO_CURRENCY}
+          methodTitle={labels.title}
+          bankName={bankName}
+          chainLabel={activeChain}
+          onBack={() => setStep("welcome")}
+          onContinue={() => setStep("pay")}
+        />
       )}
 
-      <div className="stack">
-        <div className="card">
-          <div className="payee">
-            <img
-              className="avatar"
-              src="https://i.pravatar.cc/96?img=12"
-              alt="Payee"
-            />
-            <div className="payeeInfo">
-              <p>Pay to</p>
-              <h3>{payeeName}</h3>
-            </div>
-          </div>
+      {step === "pay" && (
+        <PayStep
+          payeeName={payeeName}
+          amountLabel={amountLabel}
+          wwft={wwft}
+          onWwftChange={setWwft}
+          loading={loading}
+          payment={lastPayment}
+          error={error}
+          onBack={() => setStep("price")}
+          onConfirm={handleConfirmPay}
+        />
+      )}
 
-          <p className="amountLabel">
-            {lastPayment?.usdtAddress
-              ? `Send USDT on ${lastPayment.chainLabel}`
-              : mode === "qr"
-                ? "QR USDT amount"
-                : `Pay via ${selectedBankName}`}
-          </p>
-          <div className="amount">
-            {displayAmount.whole}
-            <span className="amountFraction">.{displayAmount.fraction}</span>
-            <span className="amountSymbol"> {CRYPTO_CURRENCY}</span>
-          </div>
-          <p className="cryptoNote">USDT cryptocurrency only — not euro (EUR)</p>
-
-          {lastPayment?.usdtAddress ? (
-            <UsdtCheckoutPanel payment={lastPayment} />
-          ) : (
-            <>
-              {showWwft && <WwftForm value={wwft} onChange={setWwft} disabled={loading} />}
-              <button
-                className="btn"
-                type="button"
-                disabled={loading || !selectedBank}
-                onClick={handlePay}
-              >
-                {showWwft ? "Continue to USDT payment" : "Create USDT order"}
-                <span className="btnArrow">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#14140f"
-                    strokeWidth="2.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </span>
-              </button>
-            </>
-          )}
-        </div>
-
-        <div className="card methodCard">
-          <div className="methodTitle">{labels.title} · UPay USDT gateway</div>
-
-          <div className="tabs">
-            <Link
-              className={`tab ${mode === "bank" ? "tabActive" : ""}`}
-              href={payBankPath(method, selectedBank || bankCode)}
-            >
-              {labels.bankTab}
-            </Link>
-            <Link
-              className={`tab ${mode === "qr" ? "tabActive" : ""}`}
-              href={payQrPath(method)}
-            >
-              QR code
-            </Link>
-          </div>
-
-          {mode === "bank" ? (
-            <div className="bankList">
-              {banks.map((bank) => (
-                <Link
-                  key={bank.code}
-                  className={`bankRow ${
-                    selectedBank === bank.code ? "bankRowSelected" : ""
-                  }`}
-                  href={payBankPath(method, bank.code)}
-                >
-                  <span
-                    className="bankIcon"
-                    style={{
-                      background: BANK_COLORS[bank.code] || "#14140f",
-                    }}
-                  >
-                    {bankInitials(bank.name)}
-                  </span>
-                  <span className="bankName">{bank.name}</span>
-                  <span className="check" />
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="qrWrap">
-              <div className="qrBox">
-                {lastPayment?.usdtAddress ? (
-                  <UsdtQrImage
-                    className="usdtQrImageInline"
-                    value={lastPayment.usdtAddress}
-                  />
-                ) : (
-                  <QrCode />
-                )}
-              </div>
-              <p className="qrText">
-                {lastPayment?.usdtAddress ? (
-                  <>
-                    Send <strong>{usdtAmount} USDT</strong> on {lastPayment.chainLabel} to the
-                    address shown above.
-                  </>
-                ) : (
-                  <>
-                    Complete WWFT verification, then scan or copy the UPay USDT address for{" "}
-                    <strong>
-                      {displayAmount.whole}.{displayAmount.fraction} {CRYPTO_CURRENCY}
-                    </strong>
-                  </>
-                )}
-              </p>
-            </div>
-          )}
-
-          <div className="navLinks">
-            <Link className="navBtn" href={methodHubPath(method)}>
-              All {labels.title} options
-            </Link>
-            <Link className="navBtn" href="/disclaimer">
-              Disclaimer
-            </Link>
-          </div>
-        </div>
-      </div>
-    </>
+      {step === "receipt" && lastPayment && (
+        <ReceiptStep
+          payment={lastPayment}
+          method={method}
+          payeeName={payeeName}
+          onNewPayment={resetFlow}
+        />
+      )}
+    </MobileShell>
   );
 }

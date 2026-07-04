@@ -95,8 +95,8 @@ export function bankInitials(name: string): string {
 }
 
 export function formatCryptoAmount(units: number = DEFAULT_AMOUNT_UNITS): string {
-  const eth = (units / 100000).toFixed(4).replace(/0+$/, "").replace(/\.$/, ".0");
-  return `${eth} ${CRYPTO_CURRENCY}`;
+  const value = (units / 100).toFixed(2);
+  return `${value} ${CRYPTO_CURRENCY}`;
 }
 
 export function formatCryptoParts(units: number = DEFAULT_AMOUNT_UNITS): {
@@ -104,7 +104,8 @@ export function formatCryptoParts(units: number = DEFAULT_AMOUNT_UNITS): {
   fraction: string;
   symbol: string;
 } {
-  const [whole, fraction = "0"] = (units / 100000).toFixed(4).split(".");
+  const value = (units / 100).toFixed(2);
+  const [whole, fraction = "00"] = value.split(".");
   return { whole, fraction, symbol: CRYPTO_CURRENCY };
 }
 
