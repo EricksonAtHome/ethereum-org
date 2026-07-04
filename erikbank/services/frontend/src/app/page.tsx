@@ -1,5 +1,5 @@
-import { PaymentPortal } from "@/components/PaymentPortal";
+import { HomeHub } from "@/components/HomeHub";
 
 export default function HomePage() {
-  return <PaymentPortal method="erikbank" />;
+  return <HomeHub />;
 }

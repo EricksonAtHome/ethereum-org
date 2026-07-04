@@ -1,10 +1,5 @@
-import { PaymentPortal } from "@/components/PaymentPortal";
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "iDEAL Pay",
-};
-
-export default function IdealPage() {
-  return <PaymentPortal method="ideal" />;
+export default function IdealRedirect() {
+  redirect("/pay/ideal");
 }

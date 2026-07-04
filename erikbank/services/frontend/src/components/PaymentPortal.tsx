@@ -1,11 +1,17 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   BANK_COLORS,
+  CRYPTO_CURRENCY,
+  DEFAULT_AMOUNT_UNITS,
   METHOD_LABELS,
   bankInitials,
-  formatAmountParts,
+  formatCryptoParts,
+  methodHubPath,
+  payBankPath,
+  payQrPath,
 } from "@/lib/constants";
 import type {
   AnalyticsSummary,
@@ -13,28 +19,31 @@ import type {
   PaymentMethod,
   PaymentResponse,
 } from "@/lib/types";
+import { CryptoDisclaimerBanner } from "./CryptoDisclaimerBanner";
 import { QrCode } from "./QrCode";
 
 interface PaymentPortalProps {
   method: PaymentMethod;
+  bankCode: string;
+  mode: "bank" | "qr";
   payeeName?: string;
-  amountCents?: number;
+  amountUnits?: number;
 }
 
-type TabId = "bank" | "qr";
 type StatusType = "success" | "error" | "pending";
 
 export function PaymentPortal({
   method,
+  bankCode,
+  mode,
   payeeName = "Sanne de Vries",
-  amountCents = 4999,
+  amountUnits = DEFAULT_AMOUNT_UNITS,
 }: PaymentPortalProps) {
   const labels = METHOD_LABELS[method];
-  const amount = useMemo(() => formatAmountParts(amountCents), [amountCents]);
+  const amount = useMemo(() => formatCryptoParts(amountUnits), [amountUnits]);
 
-  const [activeTab, setActiveTab] = useState<TabId>("bank");
   const [banks, setBanks] = useState<BankOption[]>([]);
-  const [selectedBank, setSelectedBank] = useState("");
+  const [selectedBank, setSelectedBank] = useState(bankCode.toUpperCase());
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ message: string; type: StatusType } | null>(
     null,
@@ -42,23 +51,23 @@ export function PaymentPortal({
   const [lastPayment, setLastPayment] = useState<PaymentResponse | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsSummary | null>(null);
 
+  const selectedBankName =
+    banks.find((bank) => bank.code === selectedBank)?.name || selectedBank;
+
+  useEffect(() => {
+    setSelectedBank(bankCode.toUpperCase());
+  }, [bankCode]);
+
   useEffect(() => {
     async function loadBanks() {
       try {
         const response = await fetch(`/api/banks?method=${method}`);
-        if (!response.ok) {
-          throw new Error("Could not load banks");
-        }
+        if (!response.ok) throw new Error("Could not load banks");
         const data = await response.json();
-        const list: BankOption[] = data.banks || [];
-        setBanks(list);
-        if (list.length > 0) {
-          setSelectedBank(list[0].code);
-        }
+        setBanks(data.banks || []);
       } catch {
         setStatus({
-          message:
-            "Backend unavailable. Start the ErikBank stack (./erikbank/scripts/start-local.sh).",
+          message: "Backend unavailable. Start ./scripts/start-local.sh",
           type: "error",
         });
       }
@@ -67,11 +76,9 @@ export function PaymentPortal({
     async function loadAnalytics() {
       try {
         const response = await fetch("/api/analytics");
-        if (response.ok) {
-          setAnalytics(await response.json());
-        }
+        if (response.ok) setAnalytics(await response.json());
       } catch {
-        /* analytics optional */
+        /* optional */
       }
     }
 
@@ -82,7 +89,7 @@ export function PaymentPortal({
   async function handlePay() {
     setLoading(true);
     setStatus({
-      message: "Routing via Go → Python fraud → C# compliance → Java ledger…",
+      message: "Routing crypto payment via Go → Python → C# → Java → PostgreSQL…",
       type: "pending",
     });
 
@@ -92,10 +99,10 @@ export function PaymentPortal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           payeeName,
-          amountCents,
-          currency: "EUR",
+          amountCents: amountUnits,
+          currency: CRYPTO_CURRENCY,
           method,
-          bankCode: selectedBank,
+          bankCode: mode === "qr" ? bankCode.toUpperCase() : selectedBank,
         }),
       });
 
@@ -106,14 +113,12 @@ export function PaymentPortal({
 
       setLastPayment(result);
       setStatus({
-        message: `${result.message} Ref ${result.paymentRef} · fraud ${result.fraudScore} · ${result.routingChannel}`,
+        message: `${result.message} Ref ${result.paymentRef} · ${result.currency} · fraud ${result.fraudScore}`,
         type: "success",
       });
 
       const analyticsResponse = await fetch("/api/analytics");
-      if (analyticsResponse.ok) {
-        setAnalytics(await analyticsResponse.json());
-      }
+      if (analyticsResponse.ok) setAnalytics(await analyticsResponse.json());
     } catch (error) {
       setStatus({
         message: error instanceof Error ? error.message : "Payment failed",
@@ -125,16 +130,19 @@ export function PaymentPortal({
   }
 
   const qrAmount = lastPayment
-    ? formatAmountParts(lastPayment.amountCents)
+    ? formatCryptoParts(lastPayment.amountCents)
     : amount;
 
   return (
     <>
+      <CryptoDisclaimerBanner />
+
       {analytics && (
         <div className="analyticsBar">
-          PostgreSQL ledger · {analytics.totalTransactions} payments · €
-          {(analytics.volumeCents / 100).toFixed(2)} volume · avg fraud{" "}
-          {analytics.averageFraudScore.toFixed(2)}
+          PostgreSQL ledger · {analytics.totalTransactions} crypto payments ·{" "}
+          {formatCryptoParts(analytics.volumeCents).whole}.
+          {formatCryptoParts(analytics.volumeCents).fraction}{" "}
+          {CRYPTO_CURRENCY} volume
         </div>
       )}
 
@@ -166,11 +174,15 @@ export function PaymentPortal({
             </div>
           </div>
 
-          <p className="amountLabel">Amount to pay</p>
+          <p className="amountLabel">
+            {mode === "qr" ? "QR crypto amount" : `Pay via ${selectedBankName}`}
+          </p>
           <div className="amount">
-            €{amount.whole}
-            <span className="amountFraction">,{amount.fraction}</span>
+            {amount.whole}
+            <span className="amountFraction">.{amount.fraction}</span>
+            <span className="amountSymbol"> {amount.symbol}</span>
           </div>
+          <p className="cryptoNote">Cryptocurrency only — not euro (EUR)</p>
 
           <button
             className="btn"
@@ -178,7 +190,7 @@ export function PaymentPortal({
             disabled={loading || !selectedBank}
             onClick={handlePay}
           >
-            Pay now
+            Pay crypto now
             <span className="btnArrow">
               <svg
                 viewBox="0 0 24 24"
@@ -196,35 +208,32 @@ export function PaymentPortal({
         </div>
 
         <div className="card methodCard">
-          <div className="methodTitle">Choose payment method</div>
+          <div className="methodTitle">{labels.title} checkout</div>
 
           <div className="tabs">
-            <button
-              type="button"
-              className={`tab ${activeTab === "bank" ? "tabActive" : ""}`}
-              onClick={() => setActiveTab("bank")}
+            <Link
+              className={`tab ${mode === "bank" ? "tabActive" : ""}`}
+              href={payBankPath(method, selectedBank || bankCode)}
             >
               {labels.bankTab}
-            </button>
-            <button
-              type="button"
-              className={`tab ${activeTab === "qr" ? "tabActive" : ""}`}
-              onClick={() => setActiveTab("qr")}
+            </Link>
+            <Link
+              className={`tab ${mode === "qr" ? "tabActive" : ""}`}
+              href={payQrPath(method)}
             >
               QR code
-            </button>
+            </Link>
           </div>
 
-          {activeTab === "bank" ? (
+          {mode === "bank" ? (
             <div className="bankList">
               {banks.map((bank) => (
-                <button
+                <Link
                   key={bank.code}
-                  type="button"
                   className={`bankRow ${
                     selectedBank === bank.code ? "bankRowSelected" : ""
                   }`}
-                  onClick={() => setSelectedBank(bank.code)}
+                  href={payBankPath(method, bank.code)}
                 >
                   <span
                     className="bankIcon"
@@ -236,7 +245,7 @@ export function PaymentPortal({
                   </span>
                   <span className="bankName">{bank.name}</span>
                   <span className="check" />
-                </button>
+                </Link>
               ))}
             </div>
           ) : (
@@ -245,17 +254,26 @@ export function PaymentPortal({
                 <QrCode />
               </div>
               <p className="qrText">
-                Scan with your {labels.qrApp} app to pay{" "}
+                Scan with your {labels.qrApp} wallet to pay{" "}
                 <strong>
-                  €{qrAmount.whole},{qrAmount.fraction}
+                  {qrAmount.whole}.{qrAmount.fraction} {qrAmount.symbol}
                 </strong>{" "}
-                to {payeeName}
+                to {payeeName}. Crypto only — not EUR.
                 {lastPayment?.qrPayload && (
                   <span className="qrPayload">{lastPayment.qrPayload}</span>
                 )}
               </p>
             </div>
           )}
+
+          <div className="navLinks">
+            <Link className="navBtn" href={methodHubPath(method)}>
+              All {labels.title} options
+            </Link>
+            <Link className="navBtn" href="/disclaimer">
+              Disclaimer
+            </Link>
+          </div>
         </div>
       </div>
     </>

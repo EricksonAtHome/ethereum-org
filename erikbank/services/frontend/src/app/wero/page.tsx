@@ -1,10 +1,5 @@
-import { PaymentPortal } from "@/components/PaymentPortal";
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Wero Pay",
-};
-
-export default function WeroPage() {
-  return <PaymentPortal method="wero" />;
+export default function WeroRedirect() {
+  redirect("/pay/wero");
 }
