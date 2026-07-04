@@ -15,6 +15,9 @@ services/**/.venv/
 services/**/bin/
 services/**/obj/
 services/**/dist/
+services/frontend/.next/
+services/frontend/node_modules/
+services/frontend/.env.local
 
 __pycache__/
 *.pyc
