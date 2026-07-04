@@ -57,13 +57,17 @@ try {
   await fillWwft();
   await page.waitForTimeout(600);
   await page.getByRole("button", { name: /Confirm USDT payment/i }).click({ force: true });
-  await page.waitForTimeout(3500);
+  await page.waitForTimeout(2500);
 
   const copyBtn = page.getByRole("button", { name: "Copy" });
   if (await copyBtn.isVisible().catch(() => false)) {
     await copyBtn.click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(800);
   }
+
+  // Mock UPay marks order paid after ~12s — wait for receipt step
+  await page.getByText(/Payment received/i).waitFor({ timeout: 20000 });
+  await page.waitForTimeout(2500);
 } finally {
   const video = page.video();
   await page.close();
