@@ -5,15 +5,15 @@ export const DEFAULT_CRYPTO_AMOUNT = "49.99";
 export const DEFAULT_AMOUNT_UNITS = 4999;
 
 export const BANK_COLORS: Record<string, string> = {
-  ERIKBANK: "#e8672c",
+  ERIKBANK: "#2563eb",
   DANSKE: "#14140f",
   NORDEA: "#4a90d9",
   SEB: "#7a8f4a",
-  ING: "#e8672c",
+  ING: "#2563eb",
   RABO: "#14140f",
   ABN: "#4a90d9",
   BUNQ: "#7a8f4a",
-  BNP: "#e8672c",
+  BNP: "#2563eb",
   DEUTSCHE: "#14140f",
   SOCIETE: "#4a90d9",
   BBVA: "#7a8f4a",
