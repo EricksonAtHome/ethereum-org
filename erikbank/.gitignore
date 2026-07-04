@@ -1,0 +1,17 @@
+**/*
+!.gitignore
+!sql/
+!sql/**
+!services/
+!services/**
+!scripts/
+!scripts/**
+!docker-compose.yml
+!README.md
+
+services/**/target/
+services/**/node_modules/
+services/**/.venv/
+services/**/bin/
+services/**/obj/
+services/**/dist/

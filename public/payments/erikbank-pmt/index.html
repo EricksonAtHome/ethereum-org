@@ -269,6 +269,26 @@
 
   .qr-wrap p strong { color: #14140f; }
 
+  .status-banner {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 13px;
+    line-height: 1.5;
+    background: rgba(253, 246, 236, 0.95);
+    color: #14140f;
+    box-shadow: 0 12px 30px rgba(120, 60, 10, 0.12);
+    position: relative;
+    z-index: 1;
+  }
+
+  .status-banner.success { border: 1px solid #b8d86a; }
+  .status-banner.error { border: 1px solid #e8672c; background: #fff5ef; }
+  .status-banner.pending { border: 1px solid #d9cdb8; }
+
+  .btn:disabled { opacity: 0.65; cursor: wait; transform: none; }
+
   @media (max-width: 480px) {
     .card { padding: 28px 24px; border-radius: 24px; }
     .amount { font-size: 38px; }
@@ -278,6 +298,8 @@
 </style>
 </head>
 <body>
+
+  <div id="payment-status" class="status-banner" hidden></div>
 
   <div class="stack">
 
@@ -293,7 +315,7 @@
       <p class="amount-label">Amount to pay</p>
       <div class="amount">€49<span>,99</span></div>
 
-      <button class="btn" type="button">
+      <button class="btn" id="pay-btn" type="button">
         Pay now
         <span class="arrow">
           <svg viewBox="0 0 24 24" fill="none" stroke="#14140f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
@@ -313,28 +335,7 @@
       </div>
 
       <div class="panel active" id="panel-bank">
-        <div class="bank-list">
-          <div class="bank-row selected">
-            <div class="bank-icon" style="background:#e8672c;">EB</div>
-            <span>ErikBank</span>
-            <div class="check"></div>
-          </div>
-          <div class="bank-row">
-            <div class="bank-icon" style="background:#14140f;">DN</div>
-            <span>Danske Bank</span>
-            <div class="check"></div>
-          </div>
-          <div class="bank-row">
-            <div class="bank-icon" style="background:#4a90d9;">NO</div>
-            <span>Nordea</span>
-            <div class="check"></div>
-          </div>
-          <div class="bank-row">
-            <div class="bank-icon" style="background:#7a8f4a;">SE</div>
-            <span>SEB</span>
-            <div class="check"></div>
-          </div>
-        </div>
+        <div class="bank-list" id="bank-list"></div>
       </div>
 
       <div class="panel" id="panel-qr">
@@ -374,33 +375,14 @@
               </g>
             </svg>
           </div>
-          <p>Scan with your ErikBank app to pay <strong>€49,99</strong> to Sanne de Vries</p>
+          <p id="qr-text">Scan with your ErikBank app to pay <strong>€49,99</strong> to Sanne de Vries</p>
         </div>
       </div>
     </div>
 
   </div>
 
-  <script>
-    const tabs = document.querySelectorAll('.tab');
-    const panels = { bank: document.getElementById('panel-bank'), qr: document.getElementById('panel-qr') };
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        Object.values(panels).forEach(p => p.classList.remove('active'));
-        panels[tab.dataset.tab].classList.add('active');
-      });
-    });
-
-    document.querySelectorAll('.bank-row').forEach(row => {
-      row.addEventListener('click', () => {
-        document.querySelectorAll('.bank-row').forEach(r => r.classList.remove('selected'));
-        row.classList.add('selected');
-      });
-    });
-  </script>
+  <script src="app.js"></script>
 
 </body>
 </html>
