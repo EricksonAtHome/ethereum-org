@@ -11,5 +11,6 @@ public record CreateTransactionRequest(
         String bankCode,
         BigDecimal fraudScore,
         String complianceStatus,
-        String routingChannel
+        String routingChannel,
+        String status
 ) {}

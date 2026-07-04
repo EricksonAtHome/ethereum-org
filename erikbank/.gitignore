@@ -8,6 +8,7 @@
 !scripts/**
 !docker-compose.yml
 !README.md
+!.env.example
 
 services/**/target/
 services/**/node_modules/
@@ -18,6 +19,8 @@ services/**/dist/
 services/frontend/.next/
 services/frontend/node_modules/
 services/frontend/.env.local
+scripts/node_modules/
+services/usdt-gateway/runtime/
 
 __pycache__/
 *.pyc

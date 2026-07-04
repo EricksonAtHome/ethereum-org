@@ -2,6 +2,7 @@ package com.erikbank.core.service;
 
 import com.erikbank.core.dto.CreateTransactionRequest;
 import com.erikbank.core.dto.TransactionResponse;
+import com.erikbank.core.dto.UpdateTransactionStatusRequest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,13 +45,16 @@ public class TransactionService {
     public TransactionResponse createTransaction(CreateTransactionRequest request) {
         UUID id = UUID.randomUUID();
         Instant now = Instant.now();
+        String status = request.status() != null && !request.status().isBlank()
+                ? request.status()
+                : "processing";
 
         jdbc.update(
                 """
                 INSERT INTO transactions (
                     id, payment_ref, payer_account_id, payee_name, amount_cents, currency,
                     method, bank_code, status, fraud_score, compliance_status, routing_channel, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'processing', ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 id,
                 request.paymentRef(),
@@ -60,17 +64,45 @@ public class TransactionService {
                 request.currency(),
                 request.method(),
                 request.bankCode(),
+                status,
                 request.fraudScore(),
                 request.complianceStatus(),
                 request.routingChannel(),
                 Timestamp.from(now)
         );
 
+        if ("awaiting_usdt".equals(status)) {
+            return findByPaymentRef(request.paymentRef()).orElseThrow();
+        }
+
+        completeTransaction(request.paymentRef(), request.amountCents());
+        return findByPaymentRef(request.paymentRef()).orElseThrow();
+    }
+
+    @Transactional
+    public TransactionResponse updateStatus(UpdateTransactionStatusRequest request) {
+        TransactionResponse existing = findByPaymentRef(request.paymentRef())
+                .orElseThrow(() -> new IllegalArgumentException("transaction not found"));
+
+        if ("completed".equals(request.status()) && !"completed".equals(existing.status())) {
+            completeTransaction(request.paymentRef(), existing.amountCents());
+        } else {
+            jdbc.update(
+                    "UPDATE transactions SET status = ? WHERE payment_ref = ?",
+                    request.status(),
+                    request.paymentRef()
+            );
+        }
+
+        return findByPaymentRef(request.paymentRef()).orElseThrow();
+    }
+
+    private void completeTransaction(String paymentRef, long amountCents) {
         jdbc.update(
                 "UPDATE accounts SET balance_cents = balance_cents - ? WHERE id = ? AND balance_cents >= ?",
-                request.amountCents(),
+                amountCents,
                 DEFAULT_PAYER,
-                request.amountCents()
+                amountCents
         );
 
         jdbc.update(
@@ -80,10 +112,8 @@ public class TransactionService {
                 WHERE payment_ref = ?
                 """,
                 Timestamp.from(Instant.now()),
-                request.paymentRef()
+                paymentRef
         );
-
-        return findByPaymentRef(request.paymentRef()).orElseThrow();
     }
 
     public Optional<TransactionResponse> findByPaymentRef(String paymentRef) {

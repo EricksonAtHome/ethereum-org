@@ -1,7 +1,7 @@
 import type { PaymentMethod } from "./types";
 
-export const CRYPTO_CURRENCY = "ETH";
-export const DEFAULT_CRYPTO_AMOUNT = "0.0499";
+export const CRYPTO_CURRENCY = "USDT";
+export const DEFAULT_CRYPTO_AMOUNT = "49.99";
 export const DEFAULT_AMOUNT_UNITS = 4999;
 
 export const BANK_COLORS: Record<string, string> = {
@@ -70,13 +70,14 @@ export const METHOD_LABELS: Record<
 export const DISCLAIMER = {
   title: "Cryptocurrency disclaimer",
   summary:
-    "ErikBank Pmt settles in cryptocurrency only. Amounts shown in ETH are not euro (EUR) fiat payments.",
+    "ErikBank Pmt settles in USDT cryptocurrency only. Amounts shown are not euro (EUR) fiat payments.",
   points: [
-    "This platform processes cryptocurrency transactions on blockchain rails, not SEPA or card euro payments.",
+    "This platform processes USDT cryptocurrency transactions on TRC20/ERC20 blockchain rails, not SEPA or card euro payments.",
     "Any euro-style formatting in the UI is illustrative only and does not represent fiat currency settlement.",
     "Digital asset values are volatile. You may receive a different fiat equivalent at settlement time.",
-    "Only send supported crypto assets through the displayed wallet address or QR payload.",
-    "ErikBank Pmt is a technical demo stack (Next.js, Go, Java, C#, Python, PostgreSQL) and not a licensed bank.",
+    "Only send USDT through the displayed wallet address or QR code on the selected chain.",
+    "WWFT (Dutch AML) payer data is collected and stored in PostgreSQL for every payment.",
+    "ErikBank Pmt integrates the UPay USDT Payment Gateway with ErikBank design — not a licensed bank.",
   ],
 };
 

@@ -18,9 +18,13 @@ import type {
   BankOption,
   PaymentMethod,
   PaymentResponse,
+  UsdtStatusResponse,
+  WwftPayerData,
 } from "@/lib/types";
+import { EMPTY_WWFT } from "@/lib/types";
 import { CryptoDisclaimerBanner } from "./CryptoDisclaimerBanner";
 import { QrCode } from "./QrCode";
+import { WwftForm } from "./WwftForm";
 
 interface PaymentPortalProps {
   method: PaymentMethod;
@@ -31,6 +35,20 @@ interface PaymentPortalProps {
 }
 
 type StatusType = "success" | "error" | "pending";
+
+function isWwftComplete(wwft: WwftPayerData) {
+  return Boolean(
+    wwft.fullName &&
+      wwft.dateOfBirth &&
+      wwft.email &&
+      wwft.phone &&
+      wwft.idDocumentNumber &&
+      wwft.addressStreet &&
+      wwft.addressCity &&
+      wwft.addressPostalCode &&
+      wwft.paymentPurpose,
+  );
+}
 
 export function PaymentPortal({
   method,
@@ -44,6 +62,8 @@ export function PaymentPortal({
 
   const [banks, setBanks] = useState<BankOption[]>([]);
   const [selectedBank, setSelectedBank] = useState(bankCode.toUpperCase());
+  const [wwft, setWwft] = useState<WwftPayerData>(EMPTY_WWFT);
+  const [showWwft, setShowWwft] = useState(true);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{ message: string; type: StatusType } | null>(
     null,
@@ -86,10 +106,48 @@ export function PaymentPortal({
     loadAnalytics();
   }, [method]);
 
+  useEffect(() => {
+    if (!lastPayment?.paymentRef || lastPayment.status === "completed") return;
+
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch(`/api/payments/${lastPayment.paymentRef}/usdt`);
+        if (!response.ok) return;
+        const result: UsdtStatusResponse = await response.json();
+        if (result.status === "completed") {
+          setLastPayment((prev) =>
+            prev ? { ...prev, status: "completed", usdtOrderStatus: result.usdtOrderStatus } : prev,
+          );
+          setStatus({
+            message: `USDT payment confirmed on ${prevChainLabel(lastPayment)}. Ref ${lastPayment.paymentRef}`,
+            type: "success",
+          });
+        }
+      } catch {
+        /* keep polling */
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [lastPayment]);
+
+  function prevChainLabel(payment: PaymentResponse) {
+    return payment.chainLabel || "TRC20";
+  }
+
   async function handlePay() {
+    if (!isWwftComplete(wwft)) {
+      setShowWwft(true);
+      setStatus({
+        message: "Complete all WWFT identity fields before paying.",
+        type: "error",
+      });
+      return;
+    }
+
     setLoading(true);
     setStatus({
-      message: "Routing crypto payment via Go → Python → C# → Java → PostgreSQL…",
+      message: "Creating USDT order via UPay → storing WWFT data in PostgreSQL…",
       type: "pending",
     });
 
@@ -103,6 +161,7 @@ export function PaymentPortal({
           currency: CRYPTO_CURRENCY,
           method,
           bankCode: mode === "qr" ? bankCode.toUpperCase() : selectedBank,
+          wwft,
         }),
       });
 
@@ -112,8 +171,9 @@ export function PaymentPortal({
       }
 
       setLastPayment(result);
+      setShowWwft(false);
       setStatus({
-        message: `${result.message} Ref ${result.paymentRef} · ${result.currency} · fraud ${result.fraudScore}`,
+        message: `${result.message} Ref ${result.paymentRef}`,
         type: "success",
       });
 
@@ -129,9 +189,13 @@ export function PaymentPortal({
     }
   }
 
-  const qrAmount = lastPayment
+  const displayAmount = lastPayment
     ? formatCryptoParts(lastPayment.amountCents)
     : amount;
+
+  const usdtAmount = lastPayment?.payUsdt
+    ? lastPayment.payUsdt.toFixed(2)
+    : `${displayAmount.whole}.${displayAmount.fraction}`;
 
   return (
     <>
@@ -139,10 +203,9 @@ export function PaymentPortal({
 
       {analytics && (
         <div className="analyticsBar">
-          PostgreSQL ledger · {analytics.totalTransactions} crypto payments ·{" "}
+          PostgreSQL ledger · {analytics.totalTransactions} payments · WWFT records stored ·{" "}
           {formatCryptoParts(analytics.volumeCents).whole}.
-          {formatCryptoParts(analytics.volumeCents).fraction}{" "}
-          {CRYPTO_CURRENCY} volume
+          {formatCryptoParts(analytics.volumeCents).fraction} {CRYPTO_CURRENCY} volume
         </div>
       )}
 
@@ -175,40 +238,67 @@ export function PaymentPortal({
           </div>
 
           <p className="amountLabel">
-            {mode === "qr" ? "QR crypto amount" : `Pay via ${selectedBankName}`}
+            {lastPayment?.usdtAddress
+              ? `Send USDT on ${lastPayment.chainLabel}`
+              : mode === "qr"
+                ? "QR USDT amount"
+                : `Pay via ${selectedBankName}`}
           </p>
           <div className="amount">
-            {amount.whole}
-            <span className="amountFraction">.{amount.fraction}</span>
-            <span className="amountSymbol"> {amount.symbol}</span>
+            {displayAmount.whole}
+            <span className="amountFraction">.{displayAmount.fraction}</span>
+            <span className="amountSymbol"> {CRYPTO_CURRENCY}</span>
           </div>
-          <p className="cryptoNote">Cryptocurrency only — not euro (EUR)</p>
+          <p className="cryptoNote">USDT cryptocurrency only — not euro (EUR)</p>
 
-          <button
-            className="btn"
-            type="button"
-            disabled={loading || !selectedBank}
-            onClick={handlePay}
-          >
-            Pay crypto now
-            <span className="btnArrow">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#14140f"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+          {lastPayment?.usdtAddress ? (
+            <div className="usdtCheckout">
+              <div className="usdtAmountLine">
+                Pay exactly <strong>{usdtAmount} USDT</strong>
+              </div>
+              <div className="usdtAddress">{lastPayment.usdtAddress}</div>
+              {lastPayment.qrImageUrl && (
+                <img
+                  className="usdtQrImage"
+                  src={lastPayment.qrImageUrl}
+                  alt="USDT payment QR code"
+                />
+              )}
+              <p className="usdtHint">
+                Order {lastPayment.merchantOrderSn} · {lastPayment.chainLabel} · waiting for
+                blockchain confirmation
+              </p>
+            </div>
+          ) : (
+            <>
+              {showWwft && <WwftForm value={wwft} onChange={setWwft} disabled={loading} />}
+              <button
+                className="btn"
+                type="button"
+                disabled={loading || !selectedBank}
+                onClick={handlePay}
               >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </span>
-          </button>
+                {showWwft ? "Continue to USDT payment" : "Create USDT order"}
+                <span className="btnArrow">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#14140f"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </span>
+              </button>
+            </>
+          )}
         </div>
 
         <div className="card methodCard">
-          <div className="methodTitle">{labels.title} checkout</div>
+          <div className="methodTitle">{labels.title} · UPay USDT gateway</div>
 
           <div className="tabs">
             <Link
@@ -251,16 +341,29 @@ export function PaymentPortal({
           ) : (
             <div className="qrWrap">
               <div className="qrBox">
-                <QrCode />
+                {lastPayment?.qrImageUrl ? (
+                  <img
+                    src={lastPayment.qrImageUrl}
+                    alt="USDT QR"
+                    className="usdtQrImageInline"
+                  />
+                ) : (
+                  <QrCode />
+                )}
               </div>
               <p className="qrText">
-                Scan with your {labels.qrApp} wallet to pay{" "}
-                <strong>
-                  {qrAmount.whole}.{qrAmount.fraction} {qrAmount.symbol}
-                </strong>{" "}
-                to {payeeName}. Crypto only — not EUR.
-                {lastPayment?.qrPayload && (
-                  <span className="qrPayload">{lastPayment.qrPayload}</span>
+                {lastPayment?.usdtAddress ? (
+                  <>
+                    Send <strong>{usdtAmount} USDT</strong> on {lastPayment.chainLabel} to{" "}
+                    <strong>{lastPayment.usdtAddress}</strong>
+                  </>
+                ) : (
+                  <>
+                    Complete WWFT verification, then scan or copy the UPay USDT address for{" "}
+                    <strong>
+                      {displayAmount.whole}.{displayAmount.fraction} {CRYPTO_CURRENCY}
+                    </strong>
+                  </>
                 )}
               </p>
             </div>

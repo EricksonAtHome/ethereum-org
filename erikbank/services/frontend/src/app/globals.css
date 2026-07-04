@@ -527,3 +527,115 @@ body::before {
     height: 40px;
   }
 }
+
+.wwftForm {
+  margin-bottom: 24px;
+}
+
+.wwftHeader h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #14140f;
+  margin-bottom: 4px;
+}
+
+.wwftHeader p {
+  font-size: 12px;
+  color: #9a8f80;
+  margin-bottom: 16px;
+}
+
+.wwftGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.wwftField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wwftField span {
+  font-size: 12px;
+  color: #7a7060;
+}
+
+.wwftField input,
+.wwftField select,
+.wwftField textarea {
+  border: 1px solid #eadfce;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #fff;
+  color: #14140f;
+}
+
+.wwftFieldWide {
+  grid-column: 1 / -1;
+}
+
+.chainToggle {
+  display: flex;
+  gap: 10px;
+}
+
+.chainBtn {
+  flex: 1;
+  border: 1px solid #eadfce;
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 12px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.chainBtnActive {
+  background: #14140f;
+  color: #fdf6ec;
+  border-color: #14140f;
+}
+
+.usdtCheckout {
+  margin-bottom: 8px;
+}
+
+.usdtAmountLine {
+  font-size: 15px;
+  color: #14140f;
+  margin-bottom: 10px;
+}
+
+.usdtAddress {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  word-break: break-all;
+  background: #fff;
+  border: 1px dashed #e8672c;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.usdtHint {
+  font-size: 12px;
+  color: #9a8f80;
+}
+
+.usdtQrImage,
+.usdtQrImageInline {
+  width: 160px;
+  height: 160px;
+  border-radius: 16px;
+  background: #fff;
+  margin: 0 auto 12px;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .wwftGrid {
+    grid-template-columns: 1fr;
+  }
+}

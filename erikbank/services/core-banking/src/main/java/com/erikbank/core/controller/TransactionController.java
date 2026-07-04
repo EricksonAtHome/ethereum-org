@@ -2,6 +2,7 @@ package com.erikbank.core.controller;
 
 import com.erikbank.core.dto.CreateTransactionRequest;
 import com.erikbank.core.dto.TransactionResponse;
+import com.erikbank.core.dto.UpdateTransactionStatusRequest;
 import com.erikbank.core.service.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,11 @@ public class TransactionController {
     @PostMapping("/transactions")
     public ResponseEntity<TransactionResponse> create(@RequestBody CreateTransactionRequest request) {
         return ResponseEntity.ok(transactionService.createTransaction(request));
+    }
+
+    @PatchMapping("/transactions/status")
+    public ResponseEntity<TransactionResponse> updateStatus(@RequestBody UpdateTransactionStatusRequest request) {
+        return ResponseEntity.ok(transactionService.updateStatus(request));
     }
 
     @GetMapping("/transactions/{paymentRef}")

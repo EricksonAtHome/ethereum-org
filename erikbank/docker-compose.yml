@@ -8,12 +8,63 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./sql/wwft.sql:/docker-entrypoint-initdb.d/02-wwft.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U erikbank -d erikbank"]
       interval: 5s
       timeout: 5s
       retries: 10
+
+  upay-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: upay
+      MYSQL_DATABASE: upay
+      MYSQL_USER: upay
+      MYSQL_PASSWORD: upay
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./services/usdt-gateway/ddl.sql:/docker-entrypoint-initdb.d/01-ddl.sql:ro
+      - ./sql/upay-seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uupay", "-pupay"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  upay-redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  usdt-gateway:
+    build: ./services/usdt-gateway
+    ports:
+      - "8090:80"
+    environment:
+      REDIS_HOST: upay-redis
+      REDIS_PORT: 6379
+    depends_on:
+      upay-mysql:
+        condition: service_healthy
+      upay-redis:
+        condition: service_healthy
+
+  usdt-worker:
+    build:
+      context: ./services/usdt-gateway
+      dockerfile: Dockerfile.worker
+    depends_on:
+      - usdt-gateway
+      - upay-mysql
+      - upay-redis
 
   core-banking:
     build: ./services/core-banking
@@ -31,9 +82,15 @@ services:
   payment-router:
     build: ./services/payment-router
     environment:
+      DATABASE_URL: postgresql://erikbank:erikbank@postgres:5432/erikbank?sslmode=disable
       CORE_BANKING_URL: http://core-banking:8081
       ENTERPRISE_URL: http://enterprise:8083
       FRAUD_URL: http://fraud-analytics:8084
+      UPAY_GATEWAY_URL: http://usdt-gateway:80
+      UPAY_APP_ID: ciofh5fe
+      UPAY_APP_SECRET: ed696eb5bba1f7460585cc6975e6cf9bf24903dd
+      UPAY_NOTIFY_URL: http://payment-router:8082/api/usdt/notify
+      UPAY_CALLBACK_URL: http://frontend:8085
       PORT: 8082
     ports:
       - "8082:8082"
@@ -41,6 +98,9 @@ services:
       - core-banking
       - enterprise
       - fraud-analytics
+      - usdt-gateway
+      postgres:
+        condition: service_healthy
 
   enterprise:
     build: ./services/enterprise

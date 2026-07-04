@@ -20,6 +20,7 @@ ensure_db() {
     sudo -u postgres psql -tc "SELECT 1 FROM pg_database WHERE datname='erikbank'" | grep -q 1 \
       || sudo -u postgres psql -c "CREATE DATABASE erikbank OWNER erikbank;"
     PGPASSWORD=erikbank psql -h localhost -U erikbank -d erikbank -f "$ROOT/sql/init.sql" >/dev/null
+    PGPASSWORD=erikbank psql -h localhost -U erikbank -d erikbank -f "$ROOT/sql/wwft.sql" >/dev/null 2>&1 || true
   fi
 }
 
