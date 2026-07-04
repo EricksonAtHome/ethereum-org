@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     holder_name VARCHAR(255) NOT NULL,
     iban VARCHAR(34) NOT NULL UNIQUE,
     balance_cents BIGINT NOT NULL DEFAULT 0 CHECK (balance_cents >= 0),
-    currency CHAR(3) NOT NULL DEFAULT 'EUR',
+    currency VARCHAR(8) NOT NULL DEFAULT 'EUR',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     payer_account_id UUID REFERENCES accounts(id),
     payee_name VARCHAR(255) NOT NULL,
     amount_cents BIGINT NOT NULL CHECK (amount_cents > 0),
-    currency CHAR(3) NOT NULL DEFAULT 'EUR',
+    currency VARCHAR(8) NOT NULL DEFAULT 'EUR',
     method VARCHAR(32) NOT NULL,
     bank_code VARCHAR(32),
     status VARCHAR(32) NOT NULL DEFAULT 'pending',
