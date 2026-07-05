@@ -1,23 +1,5 @@
-# Build outputs
-**/bin/
-**/obj/
-**/__pycache__/
-*.pyc
-*.pyo
-
-# Flutter
-mobile/.dart_tool/
-mobile/build/
-mobile/.flutter-plugins-dependencies
-
-# IDE
-.idea/
-.vscode/
-*.swp
-
-# OS
+node_modules/
+dist/
+.env
+*.log
 .DS_Store
-Thumbs.db
-
-# Go
-tracking/tracking

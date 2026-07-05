@@ -1,22 +1,38 @@
 services:
-  rides:
-    build: ./services/rides
+  mongo:
+    image: mongo:7
     ports:
-      - "8080:8080"
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./Backend
+    ports:
+      - "3000:3000"
     environment:
-      - ASPNETCORE_URLS=http://+:8080
-      - Services__Intelligence=http://intelligence:8082
-      - Services__Tracking=http://tracking:8081
+      PORT: 3000
+      SERVER_URL: http://localhost:3000
+      CLIENT_URL: http://localhost:5173
+      ENVIRONMENT: development
+      MONGODB_DEV_URL: mongodb://mongo:27017/passiartaxi
+      JWT_SECRET: passiar-docker-jwt-secret
+      GOOGLE_MAPS_API: ${GOOGLE_MAPS_API:-}
+      MAIL_USER: ${MAIL_USER:-}
+      MAIL_PASS: ${MAIL_PASS:-}
     depends_on:
-      - intelligence
-      - tracking
+      - mongo
 
-  tracking:
-    build: ./services/tracking
+  frontend:
+    build: ./Frontend
     ports:
-      - "8081:8081"
+      - "5173:5173"
+    environment:
+      VITE_SERVER_URL: http://localhost:3000
+      VITE_ENVIRONMENT: development
+      VITE_RIDE_TIMEOUT: 90000
+    depends_on:
+      - backend
 
-  intelligence:
-    build: ./services/intelligence
-    ports:
-      - "8082:8082"
+volumes:
+  mongo_data:

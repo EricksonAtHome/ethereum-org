@@ -1,108 +1,107 @@
-# Passiar — Ride-Sharing Taxi App
+# Passiar — Full Stack Ride Booking App
 
-Passiar is an Uber-style ride-sharing application built with a polyglot microservices architecture:
+Passiar is built on the [QuickRide](https://github.com/asif-khan-2k19/QuickRide) MERN stack, integrated and rebranded for this project. It includes user/captain authentication, ride booking, real-time GPS tracking, fare calculation, and in-app chat.
 
-| Layer | Technology | Responsibility |
-|-------|------------|----------------|
-| **Mobile** | Flutter | Destination selection, ride booking, trip tracking UI |
-| **Rides API** | C# (.NET 8) | Ride booking, driver matching, state machine |
-| **Tracking** | Go | Real-time GPS tracking via WebSocket |
-| **Intelligence** | Python (Flask) | Location suggestions, dynamic pricing, ETA |
+## Tech Stack
 
-## Architecture
+| Layer | Technology |
+|-------|------------|
+| Frontend | React, Vite, Tailwind CSS |
+| Backend | Node.js, Express, Socket.IO |
+| Database | MongoDB |
+| Maps | Google Maps API (optional dev fallback) |
+| Auth | JWT, bcrypt |
+
+## Project Structure
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────────┐
-│  Flutter App    │────▶│  C# Rides API    │────▶│  Go Tracking        │
-│  (Passiar)      │     │  :8080           │     │  :8081 (WebSocket)  │
-└────────┬────────┘     └────────┬─────────┘     └─────────────────────┘
-         │                     │
-         │                     ▼
-         │            ┌──────────────────┐
-         └───────────▶│ Python Intel.    │
-                      │ :8082            │
-                      └──────────────────┘
+passiartaxi/
+├── Backend/     # Node.js + Express API + Socket.IO
+├── Frontend/    # React + Vite web app
+└── docker-compose.yml
 ```
-
-## Ride State Machine
-
-`Searching` → `Matched` → `EnRouteToPickup` → `InTrip` → `Completed`
 
 ## Quick Start
 
-### Run all backend services with Docker
+### 1. Start MongoDB
 
 ```bash
-cd passiartaxi
+mongod --dbpath /data/db
+```
+
+Or use Docker Compose (see below).
+
+### 2. Backend
+
+```bash
+cd Backend
+cp .env.example .env   # edit as needed
+npm install
+npm run dev
+```
+
+Backend runs at **http://localhost:3000**
+
+### 3. Frontend
+
+```bash
+cd Frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+
+Frontend runs at **http://localhost:5173**
+
+### 4. Docker Compose (all services)
+
+```bash
 docker compose up --build
 ```
 
-### Run services individually
+## Environment Variables
 
-**Python Intelligence (port 8082):**
-```bash
-cd services/intelligence
-pip install -r requirements.txt
-python main.py
+### Backend `.env`
+
+```env
+PORT=3000
+SERVER_URL=http://localhost:3000
+CLIENT_URL=http://localhost:5173
+ENVIRONMENT=development
+MONGODB_DEV_URL=mongodb://127.0.0.1:27017/passiartaxi
+JWT_SECRET=your-secret-key
+GOOGLE_MAPS_API=          # optional — dev fallbacks work without it
+MAIL_USER=                # optional — email skipped if empty
+MAIL_PASS=
 ```
 
-**Go Tracking (port 8081):**
-```bash
-cd services/tracking
-go mod tidy
-go run .
+### Frontend `.env`
+
+```env
+VITE_SERVER_URL=http://localhost:3000
+VITE_ENVIRONMENT=development
+VITE_RIDE_TIMEOUT=90000
 ```
 
-**C# Rides API (port 8080):**
-```bash
-cd services/rides
-dotnet run
-```
+## Features
 
-**Flutter Mobile App:**
-```bash
-cd mobile
-flutter pub get
-flutter run
-```
+- User & Captain registration/login with JWT
+- Pickup/destination with autocomplete
+- Ride types: Car, Bike, Auto
+- Real-time ride status via Socket.IO
+- Live location tracking & in-app chat
+- Fare estimation based on distance/time
+- Ride history & profile management
 
-## API Endpoints
+## Fixes Applied
 
-### Rides Service (C#) — `:8080`
-- `GET /api/health` — Health check
-- `GET /api/rides/options` — Available ride types
-- `POST /api/rides` — Book a ride
-- `GET /api/rides/{id}` — Get ride status
+- Captain registration default location (required by schema)
+- Login 404 early return bug (user & captain)
+- MongoDB 2dsphere index auto-creation
+- Dev map fallbacks when Google Maps API key is missing
+- Email service gracefully skips when SMTP not configured
+- Rebranded from QuickRide to **Passiar**
 
-### Tracking Service (Go) — `:8081`
-- `GET /api/tracking/{rideId}` — Current trip location
-- `GET /api/tracking/{rideId}/ws` — WebSocket live updates
-- `POST /api/tracking/{rideId}/simulate` — Start tracking simulation
+## Credits
 
-### Intelligence Service (Python) — `:8082`
-- `GET /api/suggestions?q=` — Location suggestions
-- `POST /api/pricing` — Dynamic fare calculation
-- `POST /api/eta` — Estimated time of arrival
-
-## Mobile Screens
-
-1. **Destination** — Pickup/destination input with map and suggestions
-2. **Ride Selection** — Economy, Royal, Taxi options + Cash/Credit payment
-3. **Trip Tracking** — Live driver map, driver info, Message/Call actions
-
-## Configuration
-
-Flutter API URLs can be overridden at build time:
-
-```bash
-flutter run \
-  --dart-define=RIDES_URL=http://10.0.2.2:8080 \
-  --dart-define=TRACKING_URL=http://10.0.2.2:8081 \
-  --dart-define=INTELLIGENCE_URL=http://10.0.2.2:8082
-```
-
-Use `10.0.2.2` for Android emulator to reach host localhost.
-
-## License
-
-MIT
+Based on [QuickRide by Mohammad Asif Khan](https://github.com/asif-khan-2k19/QuickRide) (MIT License).
