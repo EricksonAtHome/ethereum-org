@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ErikBank Pmt",
-  description: "ErikBank mobile USDT payment portal",
+  title: "HaitiPay",
+  description: "HaitiPay USDT payment portal by ErikBank",
 };
 
 export const viewport: Viewport = {
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="pageWrap">{children}</div>
+        <SiteFooter />
+      </body>
     </html>
   );
 }

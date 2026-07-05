@@ -18,7 +18,9 @@ export function ReceiptStep({ payment, method, payeeName, onNewPayment }: Receip
 
   return (
     <div className="card flowCard receiptCard">
-      <div className="receiptIcon">✓</div>
+      <div className="receiptIcon" aria-hidden="true">
+        <span className="receiptCheck">✓</span>
+      </div>
       <p className="flowEyebrow">Step 4 · Receipt</p>
       <h2 className="flowTitle">Payment received</h2>
       <p className="flowLead">Your USDT transfer was confirmed on {payment.chainLabel}.</p>

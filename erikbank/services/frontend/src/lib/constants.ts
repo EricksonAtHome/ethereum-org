@@ -49,9 +49,9 @@ export const METHOD_LABELS: Record<
 > = {
   erikbank: {
     bankTab: "Bank",
-    qrApp: "ErikBank",
-    title: "ErikBank Pmt",
-    description: "Pay with ErikBank crypto routing",
+    qrApp: "HaitiPay",
+    title: "HaitiPay",
+    description: "Pay with HaitiPay USDT checkout",
   },
   ideal: {
     bankTab: "iDEAL",
@@ -70,14 +70,14 @@ export const METHOD_LABELS: Record<
 export const DISCLAIMER = {
   title: "Cryptocurrency disclaimer",
   summary:
-    "ErikBank Pmt settles in USDT cryptocurrency only. Amounts shown are not euro (EUR) fiat payments.",
+    "HaitiPay settles in USDT cryptocurrency only. Amounts shown are not euro (EUR) fiat payments.",
   points: [
     "This platform processes USDT cryptocurrency transactions on TRC20/ERC20 blockchain rails, not SEPA or card euro payments.",
     "Any euro-style formatting in the UI is illustrative only and does not represent fiat currency settlement.",
     "Digital asset values are volatile. You may receive a different fiat equivalent at settlement time.",
     "Only send USDT through the displayed wallet address or QR code on the selected chain.",
     "WWFT (Dutch AML) payer data is collected and stored in PostgreSQL for every payment.",
-    "ErikBank Pmt integrates the UPay USDT Payment Gateway with ErikBank design — not a licensed bank.",
+    "HaitiPay integrates the UPay USDT Payment Gateway with ErikBank design — not a licensed bank.",
   ],
 };
 

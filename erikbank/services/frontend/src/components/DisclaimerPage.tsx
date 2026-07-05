@@ -1,17 +1,5 @@
 import Link from "next/link";
-import {
-  BANK_CATALOG,
-  DISCLAIMER,
-  METHOD_LABELS,
-  payBankPath,
-} from "@/lib/constants";
-import type { PaymentMethod } from "@/lib/types";
-
-const DEFAULT_BANK: Record<PaymentMethod, string> = {
-  erikbank: "ERIKBANK",
-  ideal: "ING",
-  wero: "BNP",
-};
+import { DISCLAIMER, METHOD_LABELS, payBankPath } from "@/lib/constants";
 
 export function DisclaimerPage() {
   return (
@@ -40,17 +28,15 @@ export function DisclaimerPage() {
 
       <div className="card methodCard">
         <div className="methodTitle">Start a payment</div>
-        {(Object.keys(BANK_CATALOG) as PaymentMethod[]).map((method) => (
-          <div key={method} className="methodDisclaimerBlock">
-            <h3>{METHOD_LABELS[method].title}</h3>
-            <p className="legalText">
-              {METHOD_LABELS[method].description}.{" "}
-              <Link href={payBankPath(method, DEFAULT_BANK[method])}>
-                Start {METHOD_LABELS[method].title}
-              </Link>
-            </p>
-          </div>
-        ))}
+        <div className="methodDisclaimerBlock">
+          <h3>{METHOD_LABELS.erikbank.title}</h3>
+          <p className="legalText">
+            {METHOD_LABELS.erikbank.description}.{" "}
+            <Link href={payBankPath("erikbank", "ERIKBANK")}>
+              Start {METHOD_LABELS.erikbank.title}
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

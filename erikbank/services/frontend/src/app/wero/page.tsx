@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function WeroRedirect() {
-  redirect("/pay/wero");
+  redirect("/");
 }

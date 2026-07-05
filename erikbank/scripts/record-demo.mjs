@@ -44,7 +44,7 @@ try {
   await page.goto("http://localhost:8085", { waitUntil: "networkidle" });
   await page.waitForTimeout(1000);
 
-  await page.getByRole("link", { name: /ErikBank Pmt/i }).click();
+  await page.getByRole("link", { name: /HaitiPay/i }).first().click();
   await page.waitForTimeout(800);
 
   await page.locator('.acceptRow input[type="checkbox"]').check({ force: true });
