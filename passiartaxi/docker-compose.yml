@@ -1,0 +1,22 @@
+services:
+  rides:
+    build: ./services/rides
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - Services__Intelligence=http://intelligence:8082
+      - Services__Tracking=http://tracking:8081
+    depends_on:
+      - intelligence
+      - tracking
+
+  tracking:
+    build: ./services/tracking
+    ports:
+      - "8081:8081"
+
+  intelligence:
+    build: ./services/intelligence
+    ports:
+      - "8082:8082"

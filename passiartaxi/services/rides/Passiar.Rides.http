@@ -1,0 +1,6 @@
+@Passiar.Rides_HostAddress = http://localhost:5084
+
+GET {{Passiar.Rides_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
