@@ -3,8 +3,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HaitiPay",
-  description: "HaitiPay USDT payment portal by ErikBank",
+  title: "Ayiti Pay",
+  description: "Ayiti Pay USDT payment portal by ErikBank",
 };
 
 export const viewport: Viewport = {

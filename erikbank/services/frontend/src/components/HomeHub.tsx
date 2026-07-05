@@ -5,7 +5,7 @@ export function HomeHub() {
   return (
     <div className="stack">
       <div className="pageHero">
-        <h1>HaitiPay</h1>
+        <h1>Ayiti Pay</h1>
       </div>
 
       <div className="card methodCard">
@@ -15,7 +15,7 @@ export function HomeHub() {
         </p>
         <div className="hubGrid">
           <Link className="hubBtn hubBtnPrimary" href={payBankPath("erikbank", "ERIKBANK")}>
-            <span className="hubBtnTitle">HaitiPay</span>
+            <span className="hubBtnTitle">Ayiti Pay</span>
           </Link>
           <Link className="hubBtn hubBtnDisclaimer" href="/disclaimer">
             <span className="hubBtnTitle">Crypto disclaimer</span>
