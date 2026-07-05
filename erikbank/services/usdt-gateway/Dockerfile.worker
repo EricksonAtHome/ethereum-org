@@ -1,0 +1,32 @@
+FROM php:7.4-cli
+
+RUN apt-get update && apt-get install -y \
+    libgmp-dev \
+    libzip-dev \
+    unzip \
+    redis-tools \
+    && docker-php-ext-install gmp mysqli pdo_mysql \
+    && pecl install redis-5.3.7 \
+    && docker-php-ext-enable redis \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www/html
+COPY . /var/www/html/
+
+RUN mkdir -p runtime public/upload/qrcode \
+    && chmod -R 777 runtime public/upload \
+    && cp .env.docker .env \
+    && chmod +x docker-entrypoint.sh
+
+ENV REDIS_HOST=upay-redis
+ENV REDIS_PORT=6379
+
+ENTRYPOINT ["/var/www/html/docker-entrypoint.sh"]
+CMD while true; do \
+      php think deal_order; \
+      php think order_notify; \
+      php think deal_withdraw; \
+      php think withdraw_notify; \
+      php think deal_recharge; \
+      sleep 15; \
+    done

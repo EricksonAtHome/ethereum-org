@@ -94,6 +94,18 @@ app.get('/terms-of-use', (request, response) => {
   response.render('terms-of-use');
 });
 
+app.get('/payments/wero', (request, response) => {
+  response.sendFile(path.join(__dirname, 'dist/payments/wero/index.html'));
+});
+
+app.get('/payments/ideal', (request, response) => {
+  response.sendFile(path.join(__dirname, 'dist/payments/ideal/index.html'));
+});
+
+app.get('/payments/erikbank-pmt', (request, response) => {
+  response.sendFile(path.join(__dirname, 'dist/payments/erikbank-pmt/index.html'));
+});
+
 app.get('/*', (request, response, next) => {
   let errStatus = 404;
 

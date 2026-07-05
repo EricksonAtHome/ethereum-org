@@ -1,0 +1,157 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: erikbank
+      POSTGRES_USER: erikbank
+      POSTGRES_PASSWORD: erikbank
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./sql/wwft.sql:/docker-entrypoint-initdb.d/02-wwft.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U erikbank -d erikbank"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  upay-mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: upay
+      MYSQL_DATABASE: upay
+      MYSQL_USER: upay
+      MYSQL_PASSWORD: upay
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./services/usdt-gateway/ddl.sql:/docker-entrypoint-initdb.d/01-ddl.sql:ro
+      - ./sql/upay-seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uupay", "-pupay"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  upay-redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  usdt-gateway:
+    build: ./services/usdt-gateway
+    ports:
+      - "8090:80"
+    environment:
+      REDIS_HOST: upay-redis
+      REDIS_PORT: 6379
+      UPAY_MYSQL_HOST: upay-mysql
+      UPAY_TRC20_WALLET: ${UPAY_TRC20_WALLET:-}
+      UPAY_ERC20_WALLET: ${UPAY_ERC20_WALLET:-}
+      INFURA_API_KEY: ${INFURA_API_KEY:-}
+      ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY:-}
+      UPAY_APP_ID: ${UPAY_APP_ID:-ciofh5fe}
+      UPAY_APP_SECRET: ${UPAY_APP_SECRET:-ed696eb5bba1f7460585cc6975e6cf9bf24903dd}
+      UPAY_MERCHANT_NAME: ErikBank Merchant
+    volumes:
+      - upay-secrets:/var/upay-secrets
+    depends_on:
+      upay-mysql:
+        condition: service_healthy
+      upay-redis:
+        condition: service_healthy
+
+  usdt-worker:
+    build:
+      context: ./services/usdt-gateway
+      dockerfile: Dockerfile.worker
+    environment:
+      REDIS_HOST: upay-redis
+      REDIS_PORT: 6379
+      UPAY_MYSQL_HOST: upay-mysql
+    volumes:
+      - upay-secrets:/var/upay-secrets
+    depends_on:
+      - usdt-gateway
+      - upay-mysql
+      - upay-redis
+
+  core-banking:
+    build: ./services/core-banking
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/erikbank
+      DB_USER: erikbank
+      DB_PASSWORD: erikbank
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  payment-router:
+    build: ./services/payment-router
+    environment:
+      DATABASE_URL: postgresql://erikbank:erikbank@postgres:5432/erikbank?sslmode=disable
+      CORE_BANKING_URL: http://core-banking:8081
+      ENTERPRISE_URL: http://enterprise:8083
+      FRAUD_URL: http://fraud-analytics:8084
+      UPAY_GATEWAY_URL: http://usdt-gateway:80
+      UPAY_PUBLIC_URL: http://localhost:8090
+      UPAY_APP_ID: ciofh5fe
+      UPAY_APP_SECRET: ed696eb5bba1f7460585cc6975e6cf9bf24903dd
+      UPAY_NOTIFY_URL: http://payment-router:8082/api/usdt/notify
+      UPAY_CALLBACK_URL: http://frontend:8085
+      PORT: 8082
+    ports:
+      - "8082:8082"
+    depends_on:
+      - core-banking
+      - enterprise
+      - fraud-analytics
+      - usdt-gateway
+      postgres:
+        condition: service_healthy
+
+  enterprise:
+    build: ./services/enterprise
+    environment:
+      DATABASE_URL: Host=postgres;Port=5432;Database=erikbank;Username=erikbank;Password=erikbank
+      ASPNETCORE_URLS: http://+:8083
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  fraud-analytics:
+    build: ./services/fraud-analytics
+    environment:
+      DATABASE_URL: postgresql://erikbank:erikbank@postgres:5432/erikbank
+      PORT: 8084
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build: ./services/frontend
+    environment:
+      PAYMENT_ROUTER_URL: http://payment-router:8082
+      FRAUD_ANALYTICS_URL: http://fraud-analytics:8084
+      PORT: 8085
+    ports:
+      - "8085:8085"
+    depends_on:
+      - payment-router
+      - fraud-analytics
+
+volumes:
+  upay-secrets:
