@@ -1,11 +1,4 @@
 services:
-  mongo:
-    image: mongo:7
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
   backend:
     build: ./Backend
     ports:
@@ -15,13 +8,11 @@ services:
       SERVER_URL: http://localhost:3000
       CLIENT_URL: http://localhost:5173
       ENVIRONMENT: development
-      MONGODB_DEV_URL: mongodb://mongo:27017/passiartaxi
-      JWT_SECRET: passiar-docker-jwt-secret
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET:-passiar-docker-jwt-secret}
       GOOGLE_MAPS_API: ${GOOGLE_MAPS_API:-}
       MAIL_USER: ${MAIL_USER:-}
       MAIL_PASS: ${MAIL_PASS:-}
-    depends_on:
-      - mongo
 
   frontend:
     build: ./Frontend
@@ -33,6 +24,3 @@ services:
       VITE_RIDE_TIMEOUT: 90000
     depends_on:
       - backend
-
-volumes:
-  mongo_data:

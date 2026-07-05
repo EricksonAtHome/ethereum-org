@@ -4,6 +4,7 @@ const express = require("express");
 const { createServer } = require("http");
 const app = express();
 const server = createServer(app);
+const { initDb } = require("./config/db");
 
 socket.initializeSocket(server);
 
@@ -18,7 +19,6 @@ const rideRoutes = require("./routes/ride.routes");
 const mailRoutes = require("./routes/mail.routes");
 const keepServerRunning = require("./services/active.service");
 const dbStream = require("./services/logging.service");
-require("./config/db");
 const PORT = process.env.PORT || 4000;
 
 if (process.env.ENVIRONMENT == "production") {
@@ -53,6 +53,12 @@ app.use("/map", mapsRoutes);
 app.use("/ride", rideRoutes);
 app.use("/mail", mailRoutes);
 
-server.listen(PORT, () => {
-  console.log("Server is listening on port", PORT);
+server.listen(PORT, async () => {
+  try {
+    await initDb();
+    console.log("Server is listening on port", PORT);
+  } catch (err) {
+    console.error("Failed to start server:", err.message);
+    process.exit(1);
+  }
 });

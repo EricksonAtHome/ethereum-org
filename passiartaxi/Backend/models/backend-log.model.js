@@ -1,39 +1,21 @@
-const mongoose = require("mongoose");
+const { query } = require("../config/db");
 
-const BackendLogSchema = new mongoose.Schema({
-  method: {
-    type: String,
-    required: true,
+const BackendLog = {
+  async create(log) {
+    await query(
+      `INSERT INTO backend_logs (method, url, path, status, response_time, content_length, formatted_timestamp)
+       VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+      [
+        log.method,
+        log.url,
+        log.path,
+        log.status,
+        log.responseTime,
+        log.contentLength,
+        log.formattedTimestamp,
+      ]
+    );
   },
-  url: {
-    type: String,
-    required: true,
-  },
-  path: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: Number,
-    required: true,
-  },
-  responseTime: {
-    type: Number,
-    required: true,
-  },
-  contentLength: {
-    type: String,
-    required: false,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-  formattedTimestamp: {
-    type: String,
-  },
-});
-
-const BackendLog = mongoose.model("BackendLog", BackendLogSchema);
+};
 
 module.exports = BackendLog;

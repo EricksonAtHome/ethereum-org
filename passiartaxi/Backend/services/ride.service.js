@@ -74,7 +74,7 @@ module.exports.createRide = async ({
   try {
     const { fare, distanceTime } = await getFare(pickup, destination);
 
-    const ride = rideModel.create({
+    const ride = await rideModel.create({
       user,
       pickup,
       destination,
@@ -99,25 +99,15 @@ module.exports.confirmRide = async ({ rideId, captain }) => {
 
   try {
     await rideModel.findOneAndUpdate(
-      {
-        _id: rideId,
-      },
+      { _id: rideId },
       {
         status: "accepted",
         captain: captain._id,
       }
     );
 
-    const captainData = await captainModel.findOne({ _id: captain._id });
-
-    captainData.rides.push(rideId);
-
-    await captainData.save();
-
     const ride = await rideModel
-      .findOne({
-        _id: rideId,
-      })
+      .findOne({ _id: rideId })
       .populate("user")
       .populate("captain")
       .select("+otp");

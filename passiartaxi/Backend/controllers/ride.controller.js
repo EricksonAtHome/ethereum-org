@@ -3,7 +3,6 @@ const { validationResult } = require("express-validator");
 const mapService = require("../services/map.service");
 const { sendMessageToSocketId } = require("../socket");
 const rideModel = require("../models/ride.model");
-const userModel = require("../models/user.model");
 
 module.exports.chatDetails = async (req, res) => {
   const { id } = req.params;
@@ -55,12 +54,6 @@ module.exports.createRide = async (req, res) => {
       destination,
       vehicleType,
     });
-
-    const user = await userModel.findOne({ _id: req.user._id });
-    if (user) {
-      user.rides.push(ride._id);
-      await user.save();
-    }
 
     res.status(201).json(ride);
 

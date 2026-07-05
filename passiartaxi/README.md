@@ -1,6 +1,6 @@
 # Passiar — Full Stack Ride Booking App
 
-Passiar is built on the [QuickRide](https://github.com/asif-khan-2k19/QuickRide) MERN stack, integrated and rebranded for this project. It includes user/captain authentication, ride booking, real-time GPS tracking, fare calculation, and in-app chat.
+Passiar is built on the [QuickRide](https://github.com/asif-khan-2k19/QuickRide) MERN stack, integrated and rebranded for this project. It uses **PostgreSQL (Neon)** for data storage.
 
 ## Tech Stack
 
@@ -8,7 +8,7 @@ Passiar is built on the [QuickRide](https://github.com/asif-khan-2k19/QuickRide)
 |-------|------------|
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | Node.js, Express, Socket.IO |
-| Database | MongoDB |
+| Database | **PostgreSQL (Neon)** |
 | Maps | Google Maps API (optional dev fallback) |
 | Auth | JWT, bcrypt |
 
@@ -23,29 +23,33 @@ passiartaxi/
 
 ## Quick Start
 
-### 1. Start MongoDB
+### 1. Configure Backend
 
 ```bash
-mongod --dbpath /data/db
+cd Backend
+cp .env.example .env
 ```
 
-Or use Docker Compose (see below).
+Set your Neon PostgreSQL connection string in `.env`:
+
+```env
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/neondb?sslmode=require
+JWT_SECRET=your-secret-key
+```
 
 ### 2. Backend
 
 ```bash
-cd Backend
-cp .env.example .env   # edit as needed
 npm install
 npm run dev
 ```
 
-Backend runs at **http://localhost:3000**
+Backend runs at **http://localhost:3000** — tables are created automatically on first start.
 
 ### 3. Frontend
 
 ```bash
-cd Frontend
+cd ../Frontend
 cp .env.example .env
 npm install
 npm run dev
@@ -53,9 +57,10 @@ npm run dev
 
 Frontend runs at **http://localhost:5173**
 
-### 4. Docker Compose (all services)
+### Docker Compose
 
 ```bash
+export DATABASE_URL="your-neon-connection-string"
 docker compose up --build
 ```
 
@@ -63,17 +68,12 @@ docker compose up --build
 
 ### Backend `.env`
 
-```env
-PORT=3000
-SERVER_URL=http://localhost:3000
-CLIENT_URL=http://localhost:5173
-ENVIRONMENT=development
-MONGODB_DEV_URL=mongodb://127.0.0.1:27017/passiartaxi
-JWT_SECRET=your-secret-key
-GOOGLE_MAPS_API=          # optional — dev fallbacks work without it
-MAIL_USER=                # optional — email skipped if empty
-MAIL_PASS=
-```
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | Neon PostgreSQL connection string (required) |
+| `JWT_SECRET` | Secret for JWT tokens |
+| `GOOGLE_MAPS_API` | Optional — dev fallbacks work without it |
+| `MAIL_USER` / `MAIL_PASS` | Optional Gmail SMTP |
 
 ### Frontend `.env`
 
@@ -83,6 +83,16 @@ VITE_ENVIRONMENT=development
 VITE_RIDE_TIMEOUT=90000
 ```
 
+## Database Schema
+
+Auto-created on startup:
+
+- `users` — rider accounts
+- `captains` — driver accounts with GPS location
+- `rides` — bookings with status, fare, OTP, chat messages (JSONB)
+- `blacklist_tokens` — logout token blacklist
+- `backend_logs` / `frontend_logs` — optional logging
+
 ## Features
 
 - User & Captain registration/login with JWT
@@ -91,16 +101,6 @@ VITE_RIDE_TIMEOUT=90000
 - Real-time ride status via Socket.IO
 - Live location tracking & in-app chat
 - Fare estimation based on distance/time
-- Ride history & profile management
-
-## Fixes Applied
-
-- Captain registration default location (required by schema)
-- Login 404 early return bug (user & captain)
-- MongoDB 2dsphere index auto-creation
-- Dev map fallbacks when Google Maps API key is missing
-- Email service gracefully skips when SMTP not configured
-- Rebranded from QuickRide to **Passiar**
 
 ## Credits
 
