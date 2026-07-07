@@ -1,0 +1,56 @@
+BlueWallet is a radically simple, powerful and secure Bitcoin wallet. Store, send and receive Bitcoin while staying in full control — your keys, your coins.
+
+Free and open source, built by Bitcoin users for the community. Transact with anyone in the world and take charge of your money, right from your pocket. Create unlimited wallets for free or import an existing one — it's fast and simple.
+
+_____
+
+SECURITY BY DESIGN
+
+Open source
+MIT licensed — audit it, build it and run it yourself. Made with React Native.
+
+Your keys, your coins
+Private keys (your seed) never leave your device. You are always in control.
+
+Multisig Vault
+The best security available on Bitcoin — multiple keys are required to spend, just like a real vault.
+
+Full encryption
+On top of the device encryption, everything is encrypted again with your own password.
+
+Plausible deniability
+Set a decoy password that opens fake wallets if you are ever forced to unlock.
+
+_____
+
+POWER AND CONTROL
+
+Modern wallets
+HD wallets with full support for Legacy, SegWit and Taproot addresses.
+
+Hardware wallets
+Pair Coldcard, Keystone and other PSBT signers, and keep your coins in cold storage.
+
+Watch-only wallets
+Keep an eye on your cold storage without ever exposing your private keys.
+
+Run your own node
+Connect to your own Bitcoin full node over Electrum, and route your connection through Tor.
+
+Coin control
+See, label and freeze your coins (UTXOs) to build transactions exactly the way you want.
+
+Flexible fees
+Set your own fee, down to 1 sat/vByte. Speed up stuck transactions with RBF or CPFP, or cancel them.
+
+_____
+
+LIGHTNING NETWORK
+
+Unfairly cheap and blazing fast payments with zero configuration. Pay and get paid with Lightning addresses and LNURL.
+
+_____
+
+Available on iOS, Android and macOS. Multiple currencies and languages. Dark mode. No accounts and no tracking — just Bitcoin.
+
+BlueWallet — own your Bitcoin.

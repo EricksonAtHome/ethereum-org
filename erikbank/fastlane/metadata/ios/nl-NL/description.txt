@@ -1,0 +1,56 @@
+BlueWallet is een radicaal eenvoudige, krachtige en veilige Bitcoin-wallet. Bewaar, verzend en ontvang Bitcoin terwijl je volledig de controle houdt — jouw sleutels, jouw munten.
+
+Gratis en open source, gebouwd door Bitcoin-gebruikers voor de gemeenschap. Doe transacties met iedereen ter wereld en neem de controle over je geld, direct vanuit je broekzak. Maak gratis onbeperkt wallets aan of importeer een bestaande — het is snel en eenvoudig.
+
+_____
+
+VEILIGHEID DOOR ONTWERP
+
+Open source
+MIT-gelicentieerd — controleer het, bouw het en draai het zelf. Gemaakt met React Native.
+
+Jouw sleutels, jouw munten
+Privésleutels (je seed) verlaten nooit je apparaat. Jij hebt altijd de controle.
+
+Multisig Vault
+De beste beveiliging die Bitcoin biedt — meerdere sleutels zijn nodig om uit te geven, net als bij een echte kluis.
+
+Volledige versleuteling
+Bovenop de versleuteling van het apparaat wordt alles nogmaals versleuteld met je eigen wachtwoord.
+
+Plausibele ontkenning
+Stel een lokwachtwoord in dat nepwallets opent als je ooit gedwongen wordt te ontgrendelen.
+
+_____
+
+KRACHT EN CONTROLE
+
+Moderne wallets
+HD-wallets met volledige ondersteuning voor Legacy-, SegWit- en Taproot-adressen.
+
+Hardware wallets
+Koppel Coldcard, Keystone en andere PSBT-ondertekenaars en bewaar je munten in cold storage.
+
+Watch-only wallets
+Houd je cold storage in de gaten zonder ooit je privésleutels bloot te geven.
+
+Draai je eigen node
+Verbind met je eigen Bitcoin-full-node via Electrum en leid je verbinding via Tor.
+
+Coin control
+Bekijk, label en bevries je munten (UTXO's) om transacties precies naar wens samen te stellen.
+
+Flexibele fees
+Stel je eigen fee in, tot wel 1 sat/vByte. Versnel vastgelopen transacties met RBF of CPFP, of annuleer ze.
+
+_____
+
+LIGHTNING NETWORK
+
+Oneerlijk goedkope en razendsnelle betalingen zonder enige configuratie. Betaal en word betaald met Lightning-adressen en LNURL.
+
+_____
+
+Beschikbaar op iOS, Android en macOS. Meerdere valuta's en talen. Donkere modus. Geen accounts en geen tracking — gewoon Bitcoin.
+
+BlueWallet — bezit je eigen Bitcoin.

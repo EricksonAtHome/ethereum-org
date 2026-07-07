@@ -1,0 +1,10 @@
+Funkciók
+
+* Nyílt forráskód
+* Teljes titkosítás
+* Elfogadható tagadhatóság
+* Rugalmas díjak
+* Replace-By-Fee (RBF)
+* SegWit
+* Csak megtekintésre
+* Lightning hálózat

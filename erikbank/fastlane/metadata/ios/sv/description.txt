@@ -1,0 +1,56 @@
+BlueWallet är en radikalt enkel, kraftfull och säker Bitcoin-plånbok. Lagra, skicka och ta emot Bitcoin med full kontroll — dina nycklar, dina mynt.
+
+Gratis och öppen källkod, byggd av Bitcoin-användare för gemenskapen. Handla med vem som helst i världen och ta kontroll över dina pengar, direkt från fickan. Skapa obegränsat med plånböcker gratis eller importera en befintlig — det är snabbt och enkelt.
+
+_____
+
+SÄKERHET GENOM DESIGN
+
+Öppen källkod
+MIT-licensierad — granska den, bygg den och kör den själv. Gjord med React Native.
+
+Dina nycklar, dina mynt
+Privata nycklar (din seed) lämnar aldrig din enhet. Du har alltid kontrollen.
+
+Multisig Valv
+Den bästa säkerheten som finns på Bitcoin — flera nycklar krävs för att spendera, precis som ett riktigt valv.
+
+Full kryptering
+Utöver enhetens kryptering krypteras allt igen med ditt eget lösenord.
+
+Trovärdigt förnekande
+Ange ett lockbeteslösenord som öppnar falska plånböcker om du någonsin tvingas låsa upp.
+
+_____
+
+KRAFT OCH KONTROLL
+
+Moderna plånböcker
+HD-plånböcker med fullt stöd för Legacy-, SegWit- och Taproot-adresser.
+
+Hårdvaruplånböcker
+Para ihop Coldcard, Keystone och andra PSBT-signerare, och förvara dina mynt i kallförvaring.
+
+Plånböcker för endast granskning
+Håll ett öga på din kallförvaring utan att någonsin exponera dina privata nycklar.
+
+Kör din egen nod
+Anslut till din egen Bitcoin-fullnod via Electrum, och dirigera din anslutning genom Tor.
+
+Myntkontroll
+Se, märk och frys dina mynt (UTXO:er) för att bygga transaktioner precis som du vill.
+
+Flexibla avgifter
+Ange din egen avgift, ner till 1 sat/vByte. Påskynda fastnade transaktioner med RBF eller CPFP, eller avbryt dem.
+
+_____
+
+LIGHTNING-NÄTVERKET
+
+Orättvist billiga och blixtsnabba betalningar utan konfiguration. Betala och få betalt med Lightning-adresser och LNURL.
+
+_____
+
+Tillgänglig på iOS, Android och macOS. Flera valutor och språk. Mörkt läge. Inga konton och ingen spårning — bara Bitcoin.
+
+BlueWallet — äg din Bitcoin.

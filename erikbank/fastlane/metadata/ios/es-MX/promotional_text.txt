@@ -1,0 +1,10 @@
+Funciones
+
+* Código abierto
+* Cifrado completo
+* Negación plausible
+* Comisiones flexibles
+* Replace-By-Fee (RBF)
+* SegWit
+* Billeteras de solo lectura
+* Lightning

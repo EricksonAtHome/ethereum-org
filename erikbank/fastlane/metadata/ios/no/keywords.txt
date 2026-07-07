@@ -1,0 +1,1 @@
+bitcoin,lommebok,bitcoin-lommebok,blokkjede,btc,kryptovaluta,lightning,segwit,multisig,electrum

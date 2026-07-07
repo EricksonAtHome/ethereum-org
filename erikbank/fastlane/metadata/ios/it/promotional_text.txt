@@ -1,0 +1,10 @@
+Funzionalità
+
+* Open Source
+* Crittografia completa
+* Negazione plausibile
+* Commissioni flessibili
+* Replace-By-Fee (RBF)
+* SegWit
+* Sola lettura
+* Lightning network

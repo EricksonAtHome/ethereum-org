@@ -1,0 +1,1 @@
+ביטקוין,ארנק,ארנק ביטקוין,בלוקצ'יין,btc,מטבע קריפטו,lightning,segwit,multisig,electrum

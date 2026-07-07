@@ -1,0 +1,10 @@
+Ciri-ciri
+
+* Sumber Terbuka
+* Penyulitan penuh
+* Penafian munasabah
+* Yuran fleksibel
+* Ganti-Dengan-Yuran (RBF)
+* SegWit
+* Dompet lihat sahaja
+* Rangkaian Lightning

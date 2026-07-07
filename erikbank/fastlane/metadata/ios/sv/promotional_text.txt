@@ -1,0 +1,10 @@
+Funktioner
+
+* Öppen källkod
+* Full kryptering
+* Trovärdigt förnekande
+* Flexibla avgifter
+* Replace-By-Fee (RBF)
+* SegWit
+* Endast granskning
+* Lightning-nätverket

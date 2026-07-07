@@ -1,0 +1,10 @@
+Funcionalidades
+
+* Código aberto
+* Encriptação total
+* Negação plausível
+* Taxas flexíveis
+* Substituição por Taxa (RBF)
+* SegWit
+* Só de observação
+* Lightning network

@@ -1,0 +1,10 @@
+Características
+
+* Código abierto
+* Cifrado total
+* Negación plausible
+* Comisiones flexibles
+* Replace-By-Fee (RBF)
+* SegWit
+* Carteras de solo lectura
+* Red Lightning

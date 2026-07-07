@@ -1,0 +1,1 @@
+bitcoin,plånbok,bitcoin-plånbok,blockkedja,btc,kryptovaluta,lightning,segwit,multisig,electrum

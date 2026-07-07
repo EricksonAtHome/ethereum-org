@@ -1,0 +1,56 @@
+BlueWallet on äärimmäisen yksinkertainen, tehokas ja turvallinen Bitcoin-lompakko. Säilytä, lähetä ja vastaanota bitcoineja säilyttäen täyden hallinnan — sinun avaimesi, sinun kolikkosi.
+
+Ilmainen ja avoimen lähdekoodin sovellus, jonka Bitcoin-käyttäjät ovat rakentaneet yhteisölle. Tee siirtoja kenen tahansa kanssa ympäri maailman ja hallitse rahojasi suoraan taskustasi. Luo rajattomasti lompakoita ilmaiseksi tai tuo olemassa oleva — se on nopeaa ja yksinkertaista.
+
+_____
+
+TURVALLISUUS LÄHTÖKOHTANA
+
+Avoin lähdekoodi
+MIT-lisensoitu — tarkasta, käännä ja aja se itse. Tehty React Nativella.
+
+Sinun avaimesi, sinun kolikkosi
+Yksityiset avaimet (siemenesi) eivät koskaan poistu laitteeltasi. Olet aina itse hallinnassa.
+
+Multisig-holvi
+Paras Bitcoinissa saatavilla oleva turvallisuus — varojen käyttöön tarvitaan useita avaimia, aivan kuten oikeassa holvissa.
+
+Täysi salaus
+Laitteen salauksen lisäksi kaikki salataan uudelleen omalla salasanallasi.
+
+Uskottava kiistettävyys
+Aseta houkutussalasana, joka avaa valelompakot, jos sinut joskus pakotetaan avaamaan sovellus.
+
+_____
+
+TEHO JA HALLINTA
+
+Modernit lompakot
+HD-lompakot, joissa on täysi tuki Legacy-, SegWit- ja Taproot-osoitteille.
+
+Laitelompakot
+Yhdistä Coldcard, Keystone ja muut PSBT-allekirjoittajat ja säilytä kolikkosi kylmäsäilytyksessä.
+
+Katselulompakot
+Pidä silmällä kylmäsäilytystäsi paljastamatta koskaan yksityisiä avaimiasi.
+
+Aja oma solmusi
+Yhdistä omaan Bitcoin-täyssolmuusi Electrumin kautta ja reititä yhteytesi Torin läpi.
+
+Kolikoiden hallinta
+Katsele, merkitse ja jäädytä kolikoitasi (UTXO:t) rakentaaksesi siirtotapahtumat juuri haluamallasi tavalla.
+
+Joustavat siirtomaksut
+Aseta oma siirtomaksusi aina 1 sat/vByteen asti. Nopeuta jumiutuneita siirtotapahtumia RBF:llä tai CPFP:llä, tai peru ne.
+
+_____
+
+LIGHTNING-VERKKO
+
+Epäreilun halvat ja salamannopeat maksut ilman lainkaan määrityksiä. Maksa ja vastaanota maksuja Lightning-osoitteilla ja LNURL:lla.
+
+_____
+
+Saatavilla iOS:lle, Androidille ja macOS:lle. Useita valuuttoja ja kieliä. Tumma tila. Ei tilejä eikä seurantaa — pelkkää Bitcoinia.
+
+BlueWallet — omista Bitcoinisi.
