@@ -1,0 +1,56 @@
+BlueWallet é uma carteira Bitcoin radicalmente simples, poderosa e segura. Armazene, envie e receba Bitcoin mantendo o controle total — suas chaves, suas moedas.
+
+Gratuita e de código aberto, criada por usuários de Bitcoin para a comunidade. Faça transações com qualquer pessoa no mundo e assuma o controle do seu dinheiro, direto do seu bolso. Crie carteiras ilimitadas gratuitamente ou importe uma existente — é rápido e simples.
+
+_____
+
+SEGURANÇA POR PRINCÍPIO
+
+Código aberto
+Licença MIT — audite, compile e rode você mesmo. Feita com React Native.
+
+Suas chaves, suas moedas
+As chaves privadas (sua seed) nunca saem do seu dispositivo. Você está sempre no controle.
+
+Cofre Multisig
+A melhor segurança disponível no Bitcoin — várias chaves são necessárias para gastar, como em um cofre de verdade.
+
+Criptografia completa
+Além da criptografia do dispositivo, tudo é criptografado novamente com a sua própria senha.
+
+Negação plausível
+Defina uma senha falsa que abre carteiras falsas caso você seja forçado a desbloquear.
+
+_____
+
+PODER E CONTROLE
+
+Carteiras modernas
+Carteiras HD com suporte completo a endereços Legacy, SegWit e Taproot.
+
+Carteiras hardware
+Conecte Coldcard, Keystone e outros assinadores PSBT e mantenha suas moedas em armazenamento frio.
+
+Carteiras somente leitura
+Fique de olho no seu armazenamento frio sem nunca expor suas chaves privadas.
+
+Rode seu próprio nó
+Conecte-se ao seu próprio nó completo Bitcoin via Electrum e roteie sua conexão pelo Tor.
+
+Controle de moedas
+Veja, rotule e congele suas moedas (UTXOs) para montar transações exatamente do jeito que você quer.
+
+Taxas flexíveis
+Defina sua própria taxa, até 1 sat/vByte. Acelere transações travadas com RBF ou CPFP, ou cancele-as.
+
+_____
+
+LIGHTNING NETWORK
+
+Pagamentos absurdamente baratos e extremamente rápidos, sem configuração alguma. Pague e receba com endereços Lightning e LNURL.
+
+_____
+
+Disponível para iOS, Android e macOS. Várias moedas e idiomas. Modo escuro. Sem contas e sem rastreamento — apenas Bitcoin.
+
+BlueWallet — seja dono do seu Bitcoin.

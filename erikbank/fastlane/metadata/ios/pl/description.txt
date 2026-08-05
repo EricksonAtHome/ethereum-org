@@ -1,0 +1,56 @@
+BlueWallet to radykalnie prosty, potężny i bezpieczny portfel Bitcoin. Przechowuj, wysyłaj i odbieraj Bitcoin, zachowując pełną kontrolę — Twoje klucze, Twoje monety.
+
+Darmowy i otwartoźródłowy, stworzony przez użytkowników Bitcoina dla społeczności. Dokonuj transakcji z każdym na świecie i przejmij kontrolę nad swoimi pieniędzmi, prosto z kieszeni. Twórz nieograniczoną liczbę portfeli za darmo lub zaimportuj istniejący — to szybkie i proste.
+
+_____
+
+BEZPIECZEŃSTWO OD PODSTAW
+
+Otwarty kod źródłowy
+Na licencji MIT — audytuj go, zbuduj i uruchom samodzielnie. Stworzony przy użyciu React Native.
+
+Twoje klucze, Twoje monety
+Klucze prywatne (Twój seed) nigdy nie opuszczają Twojego urządzenia. Zawsze masz kontrolę.
+
+Skarbiec wielopodpisowy
+Najlepsze zabezpieczenie dostępne w Bitcoinie — do wydania środków potrzeba wielu kluczy, zupełnie jak w prawdziwym skarbcu.
+
+Pełne szyfrowanie
+Oprócz szyfrowania urządzenia wszystko jest dodatkowo szyfrowane Twoim własnym hasłem.
+
+Wiarygodna zaprzeczalność
+Ustaw hasło-wabik, które otwiera fałszywe portfele, gdy ktoś zmusi Cię do odblokowania.
+
+_____
+
+MOC I KONTROLA
+
+Nowoczesne portfele
+Portfele HD z pełną obsługą adresów Legacy, SegWit i Taproot.
+
+Portfele sprzętowe
+Sparuj Coldcard, Keystone i inne urządzenia podpisujące PSBT i trzymaj monety w zimnym przechowywaniu.
+
+Portfele tylko do odczytu
+Miej oko na swoje zimne przechowywanie, nigdy nie ujawniając kluczy prywatnych.
+
+Uruchom własny węzeł
+Połącz się z własnym pełnym węzłem Bitcoin przez Electrum i kieruj połączenie przez Tor.
+
+Kontrola monet
+Przeglądaj, etykietuj i zamrażaj swoje monety (UTXO), aby budować transakcje dokładnie tak, jak chcesz.
+
+Elastyczne opłaty
+Ustaw własną opłatę, nawet do 1 sat/vByte. Przyspieszaj utknięte transakcje za pomocą RBF lub CPFP albo je anuluj.
+
+_____
+
+SIEĆ LIGHTNING
+
+Niewiarygodnie tanie i błyskawiczne płatności bez żadnej konfiguracji. Płać i otrzymuj płatności dzięki adresom Lightning i LNURL.
+
+_____
+
+Dostępny na iOS, Androidzie i macOS. Wiele walut i języków. Tryb ciemny. Bez kont i bez śledzenia — po prostu Bitcoin.
+
+BlueWallet — bądź właścicielem swojego Bitcoina.

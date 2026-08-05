@@ -1,0 +1,1 @@
+bitcoin,portofel,portofel bitcoin,blockchain,btc,criptomonedă,lightning,segwit,multisig,electrum

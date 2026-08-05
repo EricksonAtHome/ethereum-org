@@ -1,0 +1,50 @@
+[main]
+host = https://www.transifex.com
+
+# fastlane App Store metadata. lang_map remaps Transifex language codes to the
+# App Store locale folder names fastlane deliver expects under fastlane/metadata/ios/<lang>/.
+# All 4 resources share the same map.
+
+[o:bluewallet:p:bluewallet-fastlane:r:ios-fastlane-metadata-en-us-description-txt--master]
+file_filter  = fastlane/metadata/ios/<lang>/description.txt
+source_file  = fastlane/metadata/ios/en-US/description.txt
+source_lang  = en_US
+type         = TXT
+minimum_perc = 1
+lang_map     = ar_SA: ar-SA, de_DE: de-DE, es_ES: es-ES, es_MX: es-MX, fr_CA: fr-CA, fr_FR: fr-FR, nl_NL: nl-NL, pt_BR: pt-BR, pt_PT: pt-PT, zh_CN: zh-Hans, zh_HK: zh-Hant
+
+[o:bluewallet:p:bluewallet-fastlane:r:ios-fastlane-metadata-en-us-keywords-txt--master]
+file_filter  = fastlane/metadata/ios/<lang>/keywords.txt
+source_file  = fastlane/metadata/ios/en-US/keywords.txt
+source_lang  = en_US
+type         = TXT
+minimum_perc = 1
+lang_map     = ar_SA: ar-SA, de_DE: de-DE, es_ES: es-ES, es_MX: es-MX, fr_CA: fr-CA, fr_FR: fr-FR, nl_NL: nl-NL, pt_BR: pt-BR, pt_PT: pt-PT, zh_CN: zh-Hans, zh_HK: zh-Hant
+
+[o:bluewallet:p:bluewallet-fastlane:r:ios-fastlane-metadata-en-us-name-txt--master]
+file_filter  = fastlane/metadata/ios/<lang>/name.txt
+source_file  = fastlane/metadata/ios/en-US/name.txt
+source_lang  = en_US
+type         = TXT
+minimum_perc = 1
+lang_map     = ar_SA: ar-SA, de_DE: de-DE, es_ES: es-ES, es_MX: es-MX, fr_CA: fr-CA, fr_FR: fr-FR, nl_NL: nl-NL, pt_BR: pt-BR, pt_PT: pt-PT, zh_CN: zh-Hans, zh_HK: zh-Hant
+
+[o:bluewallet:p:bluewallet-fastlane:r:ios-fastlane-metadata-en-us-promotional-text-txt--master]
+file_filter  = fastlane/metadata/ios/<lang>/promotional_text.txt
+source_file  = fastlane/metadata/ios/en-US/promotional_text.txt
+source_lang  = en_US
+type         = TXT
+minimum_perc = 1
+lang_map     = ar_SA: ar-SA, de_DE: de-DE, es_ES: es-ES, es_MX: es-MX, fr_CA: fr-CA, fr_FR: fr-FR, nl_NL: nl-NL, pt_BR: pt-BR, pt_PT: pt-PT, zh_CN: zh-Hans, zh_HK: zh-Hant
+
+# App UI strings. lang_map remaps Transifex language codes to the loc/<lang>.json
+# filenames the app loads (separate, larger map than the fastlane resources above).
+
+[o:bluewallet:p:bluewallet:r:loc-en-json--master]
+file_filter  = loc/<lang>.json
+source_file  = loc/en.json
+source_lang  = en
+type         = KEYVALUEJSON
+minimum_perc = 1
+lang_map     = vi_VN: vi_vn, zh_TW: zh_tw, af_ZA: zar_afr, id_ID: id_id, sk_SK: sk_sk, ja_JP: jp_jp, uk_UA: ua, zh_CN: zh_cn, hr_HR: hr_hr, tr_TR: tr_tr, sv_SE: sv_se, th_TH: th_th, pt_BR: pt_br, es_ES: es, fr_FR: fr_fr, hu_HU: hu_hu, nl_NL: nl_nl, ro: ro, ca: ca, cy: cy, de_DE: de_de, nb_NO: nb_no, pt_PT: pt_pt, xh: zar_xho, bg_BG: bg_bg, cs_CZ: cs_cz, da_DK: da_dk, el: el, fa_IR: fa, fi_FI: fi_fi
+

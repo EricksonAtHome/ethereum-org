@@ -1,0 +1,56 @@
+BlueWallet ialah dompet Bitcoin yang sangat ringkas, berkuasa dan selamat. Simpan, hantar dan terima Bitcoin sambil kekal mengawal sepenuhnya — kunci anda, syiling anda.
+
+Percuma dan sumber terbuka, dibina oleh pengguna Bitcoin untuk komuniti. Berurus niaga dengan sesiapa sahaja di dunia dan kawal wang anda, terus dari poket anda. Cipta dompet tanpa had secara percuma atau pindah masuk yang sedia ada — pantas dan ringkas.
+
+_____
+
+KESELAMATAN SECARA REKA BENTUK
+
+Sumber terbuka
+Berlesen MIT — audit, bina dan jalankannya sendiri. Dibuat dengan React Native.
+
+Kunci anda, syiling anda
+Kunci persendirian (frasa mnemonik anda) tidak pernah meninggalkan peranti anda. Anda sentiasa mengawal.
+
+Bilik Kebal Multisig
+Keselamatan terbaik yang ada pada Bitcoin — berbilang kunci diperlukan untuk berbelanja, sama seperti bilik kebal sebenar.
+
+Penyulitan penuh
+Selain penyulitan peranti, segalanya disulitkan semula dengan kata laluan anda sendiri.
+
+Penafian munasabah
+Tetapkan kata laluan umpan yang membuka dompet palsu jika anda dipaksa membuka kunci.
+
+_____
+
+KUASA DAN KAWALAN
+
+Dompet moden
+Dompet HD dengan sokongan penuh untuk alamat Legacy, SegWit dan Taproot.
+
+Dompet perkakas
+Gandingkan Coldcard, Keystone dan penandatangan PSBT lain, dan simpan syiling anda dalam simpanan sejuk.
+
+Dompet lihat sahaja
+Pantau simpanan sejuk anda tanpa sekali pun mendedahkan kunci persendirian anda.
+
+Jalankan nod anda sendiri
+Sambung ke nod penuh Bitcoin anda sendiri melalui Electrum, dan halakan sambungan anda melalui Tor.
+
+Kawalan duit
+Lihat, labelkan dan bekukan syiling anda (UTXO) untuk membina urus niaga tepat seperti yang anda mahu.
+
+Yuran fleksibel
+Tetapkan yuran anda sendiri, serendah 1 sat/vByte. Percepatkan urus niaga tersekat dengan RBF atau CPFP, atau batalkannya.
+
+_____
+
+RANGKAIAN LIGHTNING
+
+Bayaran yang sangat murah dan amat pantas tanpa sebarang konfigurasi. Bayar dan dibayar dengan alamat Lightning dan LNURL.
+
+_____
+
+Tersedia pada iOS, Android dan macOS. Pelbagai mata wang dan bahasa. Mod gelap. Tiada akaun dan tiada penjejakan — hanya Bitcoin.
+
+BlueWallet — miliki Bitcoin anda.

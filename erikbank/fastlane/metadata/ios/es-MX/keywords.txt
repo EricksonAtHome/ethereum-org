@@ -1,0 +1,1 @@
+bitcoin,billetera,billetera bitcoin,blockchain,btc,criptomoneda,lightning,segwit,multisig,electrum

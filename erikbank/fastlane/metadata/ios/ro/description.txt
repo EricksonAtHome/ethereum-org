@@ -1,0 +1,56 @@
+BlueWallet este un portofel Bitcoin radical de simplu, puternic și securizat. Stochează, trimite și primește Bitcoin păstrând controlul total — cheile tale, monedele tale.
+
+Gratuit și open source, creat de utilizatori Bitcoin pentru comunitate. Fă tranzacții cu oricine din lume și preia controlul banilor tăi, direct din buzunar. Creează portofele nelimitate gratuit sau importă unul existent — e rapid și simplu.
+
+_____
+
+SECURITATE PRIN CONCEPȚIE
+
+Open source
+Licențiat MIT — auditează-l, compilează-l și rulează-l singur. Realizat cu React Native.
+
+Cheile tale, monedele tale
+Cheile private (seed-ul tău) nu părăsesc niciodată dispozitivul. Tu deții mereu controlul.
+
+Seif multisig
+Cea mai bună securitate disponibilă pe Bitcoin — sunt necesare mai multe chei pentru a cheltui, exact ca un seif adevărat.
+
+Criptare completă
+Pe lângă criptarea dispozitivului, totul este criptat din nou cu propria ta parolă.
+
+Negare plauzibilă
+Setează o parolă-momeală care deschide portofele false dacă ești vreodată forțat să deblochezi.
+
+_____
+
+PUTERE ȘI CONTROL
+
+Portofele moderne
+Portofele HD cu suport complet pentru adrese Legacy, SegWit și Taproot.
+
+Portofele hardware
+Asociază Coldcard, Keystone și alte dispozitive de semnare PSBT și ține-ți monedele în stocare la rece.
+
+Portofele doar citire
+Supraveghează-ți stocarea la rece fără a-ți expune vreodată cheile private.
+
+Rulează-ți propriul nod
+Conectează-te la propriul nod Bitcoin complet prin Electrum și direcționează-ți conexiunea prin Tor.
+
+Controlul monedelor
+Vezi, etichetează și îngheață-ți monedele (UTXO-uri) pentru a construi tranzacții exact cum vrei.
+
+Comisioane flexibile
+Stabilește-ți propriul comision, până la 1 sat/vByte. Accelerează tranzacțiile blocate cu RBF sau CPFP, sau anulează-le.
+
+_____
+
+REȚEAUA LIGHTNING
+
+Plăți incredibil de ieftine și extrem de rapide, fără configurare. Plătește și încasează cu adrese Lightning și LNURL.
+
+_____
+
+Disponibil pe iOS, Android și macOS. Mai multe valute și limbi. Mod întunecat. Fără conturi și fără urmărire — doar Bitcoin.
+
+BlueWallet — deține-ți Bitcoinul.

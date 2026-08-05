@@ -1,0 +1,1 @@
+bitcoin,lompakko,bitcoin-lompakko,lohkoketju,btc,kryptovaluutta,lightning,segwit,multisig,electrum

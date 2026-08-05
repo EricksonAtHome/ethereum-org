@@ -1,0 +1,56 @@
+A BlueWallet é uma carteira de Bitcoin radicalmente simples, poderosa e segura. Guarda, envia e recebe Bitcoin mantendo o controlo total — as tuas chaves, as tuas moedas.
+
+Gratuita e de código aberto, criada por utilizadores de Bitcoin para a comunidade. Faz transações com qualquer pessoa no mundo e assume o controlo do teu dinheiro, diretamente do teu bolso. Cria carteiras ilimitadas gratuitamente ou importa uma já existente — é rápido e simples.
+
+_____
+
+SEGURANÇA DESDE A CONCEÇÃO
+
+Código aberto
+Licença MIT — audita-a, compila-a e executa-a por ti próprio. Feita com React Native.
+
+As tuas chaves, as tuas moedas
+As chaves privadas (a tua seed) nunca saem do teu dispositivo. Tens sempre o controlo.
+
+Cofre Multiassinatura
+A melhor segurança disponível no Bitcoin — são necessárias várias chaves para gastar, tal como num cofre real.
+
+Encriptação completa
+Além da encriptação do dispositivo, tudo é encriptado novamente com a tua própria palavra-passe.
+
+Negação plausível
+Define uma palavra-passe falsa que abre carteiras falsas caso sejas alguma vez forçado a desbloquear.
+
+_____
+
+PODER E CONTROLO
+
+Carteiras modernas
+Carteiras HD com suporte total para endereços Legacy, SegWit e Taproot.
+
+Carteiras de hardware
+Emparelha a Coldcard, a Keystone e outros assinadores PSBT, e mantém as tuas moedas em cold storage.
+
+Carteiras só de observação
+Vigia o teu cold storage sem nunca expores as tuas chaves privadas.
+
+Executa o teu próprio nó
+Liga-te ao teu próprio nó completo de Bitcoin através de Electrum e encaminha a tua ligação através de Tor.
+
+Controlo de moedas
+Vê, etiqueta e congela as tuas moedas (UTXOs) para construir transações exatamente como queres.
+
+Taxas flexíveis
+Define a tua própria taxa, até 1 sat/vByte. Acelera transações presas com RBF ou CPFP, ou cancela-as.
+
+_____
+
+LIGHTNING NETWORK
+
+Pagamentos absurdamente baratos e extremamente rápidos sem qualquer configuração. Paga e recebe pagamentos com endereços Lightning e LNURL.
+
+_____
+
+Disponível em iOS, Android e macOS. Várias moedas e idiomas. Modo escuro. Sem contas e sem rastreio — apenas Bitcoin.
+
+BlueWallet — sê dono do teu Bitcoin.

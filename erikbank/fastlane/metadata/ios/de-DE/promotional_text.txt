@@ -1,0 +1,10 @@
+Funktionen
+
+* Quelloffen
+* Volle Verschlüsselung
+* Glaubhafte Täuschung
+* Flexible Gebühren
+* Replace-By-Fee (RBF)
+* SegWit
+* Watch-only-Wallets
+* Lightning-Netzwerk

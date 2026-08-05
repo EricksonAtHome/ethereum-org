@@ -1,0 +1,166 @@
+import { AztecoVoucher } from '../class/azteco';
+import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { LightningTransaction, TWallet } from '../class/wallets/types';
+import { BitcoinUnit, Chain } from '../models/bitcoinUnits';
+import { PromptPasswordConfirmationParams } from '../screen/PromptPasswordConfirmationSheet.types';
+import { ElectrumServerItem } from '../screen/settings/ElectrumSettings';
+import { SendDetailsParams, TNavigationWrapper } from './SendDetailsStackParamList';
+
+export type ScanQRCodeParamList = {
+  cameraStatusGranted?: boolean;
+  backdoorPressed?: boolean;
+  launchedBy?: string;
+  urTotal?: number;
+  urHave?: number;
+  backdoorText?: string;
+  onBarScanned?: (data: string, useBBQR: boolean) => void;
+  showFileImportButton?: boolean;
+  backdoorVisible?: boolean;
+  orientation?: 'portrait';
+  animatedQRCodeData?: Record<string, any>;
+};
+
+type VaultKeyData = {
+  keyIndex: number;
+  seed: string;
+  passphrase?: string;
+  xpub: string;
+  fp: string;
+  path: string;
+  cosignerXpubURv2: string;
+  exportFilename: string;
+  exportString?: string;
+};
+
+type HeaderLeftRenderer = NonNullable<NativeStackNavigationOptions['headerLeft']>;
+type HeaderRightRenderer = NonNullable<NativeStackNavigationOptions['headerRight']>;
+
+export type DetailViewStackParamList = {
+  DrawerRoot: undefined;
+  UnlockWithScreen: undefined;
+  WalletsList: { onBarScanned?: string };
+  WalletTransactions: { isLoading?: boolean; walletID: string; walletType: string; onBarScanned?: string };
+  WalletDetails: { walletID: string };
+  // TODO: type tx properly once Transaction and ElectrumTransaction are unified
+  TransactionStatus: { hash: string; walletID: string; tx?: any };
+  CPFP: {
+    wallet: TWallet | null;
+    txid: string;
+  };
+  RBFBumpFee: { txid: string; wallet: TWallet | null };
+  RBFCancel: { txid: string; wallet: TWallet | null };
+  SelectWallet: {
+    chainType?: Chain;
+    onWalletSelect?: (wallet: TWallet, navigationWrapper: TNavigationWrapper) => void;
+    availableWallets?: TWallet[];
+    noWalletExplanationText?: string;
+    onChainRequireSend?: boolean;
+    selectedWalletID?: string; // Add this parameter to scroll to a specific wallet
+  };
+  LNDViewInvoice: { invoice: LightningTransaction; walletID: string };
+  LNDViewAdditionalInvoiceInformation: { invoiceId: string };
+  LNDViewAdditionalInvoicePreImage: { invoiceId: string };
+  Broadcast: object;
+  IsItMyAddress: object;
+  GenerateWord: undefined;
+  LnurlPay: undefined;
+  LnurlPaySuccess: {
+    paymentHash: string;
+    justPaid: boolean;
+    fromWalletID: string;
+  };
+  LnurlAuth: undefined;
+  Success: undefined;
+  WalletAddresses: { walletID: string };
+  AddWalletRoot: undefined;
+  SendDetailsRoot: SendDetailsParams;
+  LNDCreateInvoiceRoot: undefined;
+  ScanLNDInvoiceRoot: {
+    screen: string;
+    params: {
+      paymentHash: string;
+      fromWalletID: string;
+      justPaid: boolean;
+    };
+  };
+  AztecoRedeemRoot: {
+    screen: string;
+    params: {
+      aztecoVoucher: AztecoVoucher;
+    };
+  };
+  AztecoRedeem: { aztecoVoucher: AztecoVoucher };
+  WalletExport: undefined;
+  ExportMultisigCoordinationSetupRoot: undefined;
+  Settings: undefined;
+  Currency: undefined;
+  GeneralSettings: undefined;
+  Licensing: undefined;
+  NetworkSettings: undefined;
+  About: undefined;
+  // DefaultView: undefined; // Commented out - not accessible from UI
+  ElectrumSettings: { server?: ElectrumServerItem; onBarScanned?: string; headerRight?: HeaderRightRenderer | null };
+  SettingsBlockExplorer: undefined;
+  PlausibleDeniability: undefined;
+  EncryptStorage: undefined;
+  Language: undefined;
+  LightningSettings: {
+    url?: string;
+    onBarScanned?: string;
+  };
+  NotificationSettings: undefined;
+  SelfTest: undefined;
+  ReleaseNotes: undefined;
+  SettingsTools: undefined;
+  ViewEditMultisigCosigners: {
+    walletID: string;
+    cosigners: string[];
+    headerRight?: HeaderRightRenderer | null;
+    sheetAction?: string;
+    sheetImportText?: string;
+    sheetAskPassphrase?: boolean;
+    sheetCurrentlyEditingCosignerNum?: number;
+  };
+  ViewEditMultisigCosignerViewSheet: { walletID: string; vaultKeyData: VaultKeyData };
+  ViewEditMultisigProvideMnemonicsSheet: {
+    walletID: string;
+    currentlyEditingCosignerNum: number;
+    importText: string;
+    askPassphrase: boolean;
+  };
+  ViewEditMultisigShareCosignerSheet: {
+    walletID: string;
+    cosignerXpub: string;
+    cosignerXpubURv2: string;
+    exportFilename: string;
+  };
+  WalletXpub: { walletID: string; xpub: string };
+  SignVerifyRoot: {
+    screen: 'SignVerify';
+    params: {
+      walletID: string;
+      address: string;
+    };
+  };
+  ReceiveDetails: {
+    walletID?: string;
+    address: string;
+    headerLeft?: HeaderLeftRenderer;
+    headerRight?: HeaderRightRenderer;
+    headerBackVisible?: boolean;
+  };
+  ReceiveCustomAmount: {
+    address: string;
+    currentLabel?: string;
+    currentAmount?: string;
+    currentUnit?: BitcoinUnit;
+    preferredUnit?: BitcoinUnit;
+  };
+  ScanQRCode: ScanQRCodeParamList;
+  PaymentCodeList: {
+    paymentCode: string;
+    walletID: string;
+  };
+  PromptPasswordConfirmationSheet: PromptPasswordConfirmationParams | undefined;
+  ManageWallets: undefined;
+};

@@ -1,0 +1,1 @@
+bitcoin,wallet,bitcoin wallet,blockchain,btc,kryptovaluta,lightning,segwit,multisig,electrum

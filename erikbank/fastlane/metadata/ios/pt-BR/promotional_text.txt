@@ -1,0 +1,10 @@
+Recursos
+
+* Código aberto
+* Criptografia completa
+* Negação plausível
+* Taxas flexíveis
+* Replace-By-Fee (RBF)
+* SegWit
+* Carteiras somente leitura
+* Lightning Network

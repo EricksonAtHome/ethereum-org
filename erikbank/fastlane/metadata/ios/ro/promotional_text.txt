@@ -1,0 +1,10 @@
+Funcționalități
+
+* Open Source
+* Criptare completă
+* Negare plauzibilă
+* Comisioane flexibile
+* Replace-By-Fee (RBF)
+* SegWit
+* Portofele doar citire
+* Rețeaua Lightning
