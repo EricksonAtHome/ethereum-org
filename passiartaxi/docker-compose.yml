@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ./Backend
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      SERVER_URL: http://localhost:3000
+      CLIENT_URL: http://localhost:5173
+      ENVIRONMENT: development
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET:-passiar-docker-jwt-secret}
+      GOOGLE_MAPS_API: ${GOOGLE_MAPS_API:-}
+      MAIL_USER: ${MAIL_USER:-}
+      MAIL_PASS: ${MAIL_PASS:-}
+
+  frontend:
+    build: ./Frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_SERVER_URL: http://localhost:3000
+      VITE_ENVIRONMENT: development
+      VITE_RIDE_TIMEOUT: 90000
+    depends_on:
+      - backend
